@@ -150,7 +150,7 @@ const DashboardPage = () => {
           <a href="#" className="nav-item active">
             <LayoutGrid size={18} /> Dashboard
           </a>
-          <a href="#" className="nav-item">
+          <a onClick={() => navigate('/pipeline')} className="nav-item cursor-pointer">
             <TrendingUp size={18} /> Pipeline
           </a>
           <a href="#" className="nav-item">
