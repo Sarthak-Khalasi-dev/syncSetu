@@ -1810,6 +1810,28 @@ body {
   border-radius: 6px;
 }
 
+.move-btn-mini {
+  background: #f1f4f3;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #125143;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.move-btn-mini:hover {
+  background: #125143;
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
 .label-inbound { background: #e0f2fe; color: #0369a1; }
 .label-lead { background: #fef9c3; color: #a16207; }
 .label-whatsapp { background: #dcfce7; color: #15803d; }
@@ -1942,4 +1964,49 @@ body {
   transition: transform 0.2s;
 }
 
-.global-fab:hover { transform: scale(1.1); }
+.global-fab:hover { transform: scale(1.1); }
+
+/* Deal Card Action Menu */
+.action-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 8px;
+  z-index: 50;
+  min-width: 140px;
+  margin-top: 8px;
+  border: 1px solid #f1f4f3;
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a635d;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-item:hover {
+  background: #f8faf9;
+  color: #125143;
+}
+
+.menu-item.delete {
+  color: #ef4444;
+}
+
+.menu-item.delete:hover {
+  background: #fff1f2;
+  color: #e11d48;
+}

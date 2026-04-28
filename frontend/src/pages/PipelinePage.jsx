@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,18 +17,28 @@ import {
   CheckCircle2,
   Clock,
   IndianRupee,
-  X
+  X,
+  ArrowRight,
+  Trash2,
+  Edit3,
+  Link
 } from 'lucide-react';
 
 const PipelinePage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedColId, setSelectedColId] = useState("col-1");
+  const [editingCardId, setEditingCardId] = useState(null);
+  const [newDeal, setNewDeal] = useState({ name: "", subtitle: "", value: "", label: "LEAD" });
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
   const [pipelineData, setPipelineData] = useState([
     {
       id: "col-1",
       title: "NEW",
-      count: 3,
+      count: 2,
       cards: [
         { id: 1, label: "INBOUND", name: "Manoj Gupta", subtitle: "Residential Property Inquiry", value: "85,000", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
         { id: 2, label: "LEAD", name: "Ananya Sharma", subtitle: "Corporate Office Lease", value: "1,20,000", status: "Overdue", statusColor: "#ef4444" }
@@ -54,7 +64,7 @@ const PipelinePage = () => {
     {
       id: "col-4",
       title: "CLOSED",
-      count: 4,
+      count: 2,
       cards: [
         { id: 6, label: "WON", name: "Deepak Verma", subtitle: "Retail Space Lease", value: "90,000", completed: true },
         { id: 7, label: "WON", name: "Sunita Kapoor", subtitle: "Interior Design Lead", value: "1,75,000", completed: true }
@@ -62,9 +72,115 @@ const PipelinePage = () => {
     }
   ]);
 
+  // Dynamic Forecast Calculation
+  const totalForecast = useMemo(() => {
+    let total = 0;
+    pipelineData.forEach(col => {
+      col.cards.forEach(card => {
+        const val = parseInt(card.value.toString().replace(/[^0-9]/g, '')) || 0;
+        total += val;
+      });
+    });
+    return total.toLocaleString('en-IN');
+  }, [pipelineData]);
+
+  const openAddModal = (colId = "col-1") => {
+    setIsEditMode(false);
+    setSelectedColId(colId);
+    setNewDeal({ name: "", subtitle: "", value: "", label: "LEAD" });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (card, colId) => {
+    setIsEditMode(true);
+    setSelectedColId(colId);
+    setEditingCardId(card.id);
+    setNewDeal({ name: card.name, subtitle: card.subtitle, value: card.value, label: card.label });
+    setIsModalOpen(true);
+    setActiveMenuId(null);
+  };
+
+  const handleSaveDeal = (e) => {
+    e.preventDefault();
+    if (!newDeal.name || !newDeal.value) return;
+
+    if (isEditMode) {
+      setPipelineData(prev => prev.map(col => {
+        if (col.id === selectedColId) {
+          return {
+            ...col,
+            cards: col.cards.map(card => card.id === editingCardId ? { ...card, ...newDeal } : card)
+          };
+        }
+        return col;
+      }));
+    } else {
+      const isClosedCol = selectedColId === "col-4";
+      const newEntry = {
+        id: Date.now(),
+        ...newDeal,
+        completed: isClosedCol,
+        label: isClosedCol ? "WON" : newDeal.label
+      };
+
+      setPipelineData(prev => prev.map(col => {
+        if (col.id === selectedColId) {
+          return {
+            ...col,
+            count: col.count + 1,
+            cards: [newEntry, ...col.cards]
+          };
+        }
+        return col;
+      }));
+    }
+
+    setNewDeal({ name: "", subtitle: "", value: "", label: "LEAD" });
+    setIsModalOpen(false);
+  };
+
+  const moveNext = (card, currentColId) => {
+    const colOrder = ["col-1", "col-2", "col-3", "col-4"];
+    const currentIndex = colOrder.indexOf(currentColId);
+    if (currentIndex >= colOrder.length - 1) return;
+
+    const nextColId = colOrder[currentIndex + 1];
+    const updatedCard = { 
+      ...card, 
+      completed: nextColId === "col-4",
+      label: nextColId === "col-4" ? "WON" : card.label
+    };
+
+    setPipelineData(prev => prev.map(col => {
+      if (col.id === currentColId) {
+        return { ...col, count: col.count - 1, cards: col.cards.filter(c => c.id !== card.id) };
+      }
+      if (col.id === nextColId) {
+        return { ...col, count: col.count + 1, cards: [updatedCard, ...col.cards] };
+      }
+      return col;
+    }));
+  };
+
+  const deleteDeal = (cardId, colId) => {
+    setPipelineData(prev => prev.map(col => {
+      if (col.id === colId) {
+        return { ...col, count: col.count - 1, cards: col.cards.filter(c => c.id !== cardId) };
+      }
+      return col;
+    }));
+    setActiveMenuId(null);
+  };
+
+  const copyDealLink = (card) => {
+    const dummyLink = `${window.location.origin}/pipeline/deal/${card.id}`;
+    navigator.clipboard.writeText(dummyLink);
+    alert("Deal link copied to clipboard!");
+    setActiveMenuId(null);
+  };
+
   return (
-    <div className="dashboard-container">
-      {/* Sidebar - Shared Design */}
+    <div className="dashboard-container" onClick={() => setActiveMenuId(null)}>
       <aside className="sidebar">
         <div className="sidebar-logo">SyncSetu</div>
         <nav className="sidebar-nav">
@@ -108,7 +224,6 @@ const PipelinePage = () => {
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="main-content pipeline-content-wrapper">
         <header className="pipeline-header">
           <div className="header-left">
@@ -124,15 +239,14 @@ const PipelinePage = () => {
             </div>
           </div>
           <div className="header-right">
-            <button className="icon-btn"><Bell size={20} /></button>
+            <button className="icon-btn" onClick={(e) => e.stopPropagation()}><Bell size={20} /></button>
             <div className="forecast-display">
-              <span className="label">Forecast</span>
-              <span className="amount">₹ 4,28,000</span>
+              <span className="label">Dynamic Forecast</span>
+              <span className="amount">₹ {totalForecast}</span>
             </div>
           </div>
         </header>
 
-        {/* Scrollable Board */}
         <div className="pipeline-scroll-area">
           <motion.div 
             className="pipeline-board-layout"
@@ -153,7 +267,7 @@ const PipelinePage = () => {
                     <h3>{column.title}</h3>
                     <span className="count-pill">{column.count}</span>
                   </div>
-                  <Plus size={18} className="add-deal-icon" />
+                  <Plus size={18} className="add-deal-icon" onClick={(e) => { e.stopPropagation(); openAddModal(column.id); }} />
                 </div>
 
                 <div className="column-cards-list">
@@ -164,14 +278,64 @@ const PipelinePage = () => {
                         layout
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
                         className="pipeline-card"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <div className="card-top">
                           <span className={`card-label label-${card.label.toLowerCase().replace(/\s+/g, '-')}`}>
                             {card.label}
                           </span>
-                          <MoreHorizontal size={14} className="more-btn" />
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+                            {column.id !== 'col-4' && (
+                              <button 
+                                className="move-btn-mini" 
+                                title="Move to next stage"
+                                onClick={() => moveNext(card, column.id)}
+                              >
+                                <ArrowRight size={14} />
+                              </button>
+                            )}
+                            
+                            <div className="card-menu-wrapper" style={{ position: 'relative' }}>
+                                <MoreHorizontal 
+                                  size={14} 
+                                  className="more-btn" 
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveMenuId(activeMenuId === card.id ? null : card.id);
+                                  }}
+                                />
+                                
+                                <AnimatePresence>
+                                  {activeMenuId === card.id && (
+                                    <motion.div 
+                                      initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                                      className="action-menu"
+                                    >
+                                      <button className="menu-item" onClick={() => openEditModal(card, column.id)}>
+                                        <Edit3 size={14} /> Edit Deal
+                                      </button>
+                                      <button className="menu-item" onClick={() => copyDealLink(card)}>
+                                        <Link size={14} /> Copy Link
+                                      </button>
+                                      <div style={{ height: '1px', background: '#f1f4f3', margin: '4px 0' }}></div>
+                                      <button 
+                                        className="menu-item delete"
+                                        onClick={() => deleteDeal(card.id, column.id)}
+                                      >
+                                        <Trash2 size={14} /> Delete Deal
+                                      </button>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                            </div>
+                          </div>
                         </div>
+
                         <h4 className="card-person">{card.name}</h4>
                         <p className="card-desc">{card.subtitle}</p>
                         
@@ -197,7 +361,6 @@ const PipelinePage = () => {
           </motion.div>
         </div>
 
-        {/* Bottom Widgets - Fixed to Bottom */}
         <footer className="pipeline-footer-stats">
           <div className="stats-card win-rate">
             <div className="stats-label">WIN RATE</div>
@@ -220,11 +383,87 @@ const PipelinePage = () => {
             </div>
             <button className="schedule-btn">View Schedule</button>
           </div>
-        </footer >
+        </footer>
 
-        <button className="global-fab">
+        <button className="global-fab" onClick={(e) => { e.stopPropagation(); openAddModal("col-1"); }}>
           <Plus size={28} />
         </button>
+
+        <AnimatePresence>
+          {isModalOpen && (
+            <div className="modal-overlay">
+              <motion.div 
+                className="modal-content"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="modal-header">
+                  <h2>{isEditMode ? "Edit Deal" : "Create New Deal"}</h2>
+                  <button onClick={() => setIsModalOpen(false)} className="close-btn">
+                    <X size={24} />
+                  </button>
+                </div>
+                <form onSubmit={handleSaveDeal} className="add-lead-form">
+                  <div className="form-group">
+                    <label>Lead Name</label>
+                    <input 
+                      type="text" 
+                      value={newDeal.name}
+                      onChange={(e) => setNewDeal({...newDeal, name: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Opportunity Detail</label>
+                    <input 
+                      type="text" 
+                      value={newDeal.subtitle}
+                      onChange={(e) => setNewDeal({...newDeal, subtitle: e.target.value})}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Deal Value (₹)</label>
+                    <input 
+                      type="text" 
+                      value={newDeal.value}
+                      onChange={(e) => setNewDeal({...newDeal, value: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Source Label</label>
+                    <select 
+                      value={newDeal.label}
+                      onChange={(e) => setNewDeal({...newDeal, label: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        borderRadius: '12px',
+                        border: '1.5px solid #eaf1ed',
+                        background: '#fcfdfd',
+                        outline: 'none'
+                      }}
+                    >
+                      <option value="LEAD">LEAD</option>
+                      <option value="INBOUND">INBOUND</option>
+                      <option value="WHATSAPP">WHATSAPP</option>
+                      <option value="HIGH INTENT">HIGH INTENT</option>
+                      <option value="WON">WON</option>
+                    </select>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" onClick={() => setIsModalOpen(false)} className="btn-cancel">Cancel</button>
+                    <button type="submit" className="btn-save">
+                      {isEditMode ? "Update Deal" : "Save Deal"}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
