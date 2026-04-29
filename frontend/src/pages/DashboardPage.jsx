@@ -1,66 +1,28 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
-  LayoutGrid,
-  TrendingUp,
-  BookUser,
-  Inbox,
-  BellRing,
-  Users,
-  Settings,
-  Search,
-  Bell,
   IndianRupee,
   UserPlus,
   CheckCircle,
   ArrowUpRight,
   Plus,
-  HelpCircle,
   Send,
   Smile,
   Trash2,
   MoreVertical,
-  X,
-  BellOff,
-  User,
-  Zap,
-  Clock
+  Search
 } from 'lucide-react';
 
 import { useState, useEffect, useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
-import logo from '../assets/logo.png';
+import Sidebar from '../components/Sidebar';
+import TopHeader from '../components/TopHeader';
+import AddContactModal from '../components/AddContactModal';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "New Lead Assigned",
-      desc: "Manoj Gupta has been assigned to your pipeline.",
-      time: "2 mins ago",
-      type: "lead",
-      unread: true
-    },
-    {
-      id: 2,
-      title: "Task Reminder",
-      desc: "Follow up with Ananya Kapoor regarding the site visit.",
-      time: "1 hour ago",
-      type: "task",
-      unread: true
-    },
-    {
-      id: 3,
-      title: "Deal Won! 🎉",
-      desc: "Deepak Verma just closed a ₹90,000 deal.",
-      time: "3 hours ago",
-      type: "success",
-      unread: false
-    }
-  ]);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const [leads, setLeads] = useState([
     {
@@ -83,8 +45,6 @@ const DashboardPage = () => {
     }
   ]);
 
-  const [newLead, setNewLead] = useState({ name: "", company: "" });
-  const [searchQuery, setSearchQuery] = useState("");
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -146,49 +106,24 @@ const DashboardPage = () => {
     setMessages(prev => prev.filter(m => m.id !== id));
   };
 
-  const handleAddLead = (e) => {
-    e.preventDefault();
-    if (!newLead.name || !newLead.company) return;
-
+  const handleAddContact = (formData) => {
     const lead = {
       id: Date.now(),
-      name: newLead.name,
-      company: newLead.company,
+      name: formData.name,
+      company: formData.business || "New Relationship",
       avatar: `https://avatar.iran.liara.run/public/${Math.floor(Math.random() * 50)}`,
-      badge: "NEW",
-      badgeType: "green",
+      badge: formData.stage || "NEW",
+      badgeType: formData.stage === "CLOSED" ? "teal" : "green",
       time: "Just now"
     };
 
     setLeads([lead, ...leads]);
-    setNewLead({ name: "", company: "" });
     setIsAddLeadOpen(false);
-
-    // Mock notification for adding lead
-    const newNotif = {
-      id: Date.now(),
-      title: "Lead Created",
-      desc: `${newLead.name} was successfully added to your list.`,
-      time: "Just now",
-      type: "lead",
-      unread: true
-    };
-    setNotifications([newNotif, ...notifications]);
-  };
-
-  const markAsRead = (id) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, unread: false } : n));
-  };
-
-  const clearAllNotifications = () => {
-    setNotifications([]);
   };
 
   const onEmojiClick = (emojiObject) => {
     setInputText(prev => prev + emojiObject.emoji);
   };
-
-  const unreadCount = notifications.filter(n => n.unread).length;
 
   const filteredLeads = leads.filter(lead => 
     lead.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -196,138 +131,17 @@ const DashboardPage = () => {
   );
 
   return (
-    <div className="dashboard-container" onClick={() => setIsNotificationOpen(false)}>
-      {/* Sidebar */}
-      <aside className="sidebar" onClick={(e) => e.stopPropagation()}>
-        <div className="sidebar-logo">
-          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
-          SyncSetu
-        </div>
-        <nav className="sidebar-nav">
-          <a href="#" className="nav-item active">
-            <LayoutGrid size={18} /> Dashboard
-          </a>
-          <a onClick={() => navigate('/pipeline')} className="nav-item cursor-pointer">
-            <TrendingUp size={18} /> Pipeline
-          </a>
-          <a href="#" className="nav-item">
-            <BookUser size={18} /> Contacts
-          </a>
-          <a href="#" className="nav-item">
-            <Inbox size={18} /> Inbox
-          </a>
-          <a href="#" className="nav-item">
-            <BellRing size={18} /> Follow-ups
-          </a>
-          <a href="#" className="nav-item">
-            <Users size={18} /> Team
-          </a>
-          <a href="#" className="nav-item">
-            <Settings size={18} /> Settings
-          </a>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <button className="btn-new-message">
-            <Plus size={18} /> New Message
-          </button>
-          <a href="#" className="nav-item nav-item-support">
-            <HelpCircle size={18} /> Help Support
-          </a>
-          <div className="user-profile-widget">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Sterling" className="widget-avatar" />
-            <div className="widget-info">
-              <div className="widget-name">Alex Sterling</div>
-              <div className="widget-role">Premium Account</div>
-            </div>
-          </div>
-        </div>
-      </aside>
+    <div className="dashboard-container">
+      <Sidebar />
 
       {/* Main Content */}
       <main className="main-content">
-        <header className="dashboard-header" onClick={(e) => e.stopPropagation()}>
-          <div className="header-left">
-            <h2 className="mobile-logo">SyncSetu</h2>
-          </div>
-          <div className="header-search">
-            <Search size={18} className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search relationships..." 
-              className="search-input" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="header-actions">
-            <div className="notification-wrapper">
-              <button 
-                className={`icon-btn ${isNotificationOpen ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsNotificationOpen(!isNotificationOpen);
-                }}
-              >
-                <Bell size={20} />
-                {unreadCount > 0 && <span className="notification-dot"></span>}
-              </button>
-              
-              <AnimatePresence>
-                {isNotificationOpen && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                    className="notification-dropdown"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="dropdown-header">
-                      <h3>Notifications</h3>
-                      {notifications.length > 0 && (
-                        <button className="clear-all-btn" onClick={clearAllNotifications}>Clear all</button>
-                      )}
-                    </div>
-                    <div className="dropdown-body">
-                      {notifications.length === 0 ? (
-                        <div className="empty-state">
-                          <BellOff size={32} />
-                          <p>No notifications yet</p>
-                          <span>We'll let you know when something happens!</span>
-                        </div>
-                      ) : (
-                        notifications.map(notif => (
-                          <div 
-                            key={notif.id} 
-                            className="notification-item" 
-                            onClick={() => markAsRead(notif.id)}
-                          >
-                            <div className={`notif-icon ${
-                              notif.type === 'lead' ? 'bg-teal-light' : 
-                              notif.type === 'task' ? 'bg-slate-light' : 'bg-green-light'
-                            }`}>
-                              {notif.type === 'lead' ? <User size={18} className="text-teal" /> :
-                               notif.type === 'task' ? <Clock size={18} className="text-slate" /> :
-                               <Zap size={18} className="text-green" />}
-                            </div>
-                            <div className="notif-content">
-                              <span className="notif-title">{notif.title}</span>
-                              <span className="notif-desc">{notif.desc}</span>
-                              <span className="notif-time">{notif.time}</span>
-                            </div>
-                            {notif.unread && <div className="unread-glow"></div>}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <button className="icon-btn"><Search size={20} className="mobile-search-icon" /></button>
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Profile" className="user-avatar" />
-          </div>
-        </header>
+        <TopHeader 
+          title="Dashboard" 
+          searchPlaceholder="Search relationships..."
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
 
         <div className="dashboard-content">
           <div className="overview-header">
@@ -386,7 +200,7 @@ const DashboardPage = () => {
             <div className="recent-leads-section">
               <div className="section-header">
                 <h2>Recent Leads</h2>
-                <button className="view-all">View All Relationships</button>
+                <button className="view-all" onClick={() => navigate('/contacts')}>View All Relationships</button>
               </div>
               <div className="leads-list">
                 {filteredLeads.length === 0 ? (
@@ -474,53 +288,11 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Add Lead Modal */}
-        <AnimatePresence>
-          {isAddLeadOpen && (
-            <div className="modal-overlay" onClick={() => setIsAddLeadOpen(false)}>
-              <motion.div 
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="modal-header">
-                  <h2>Create New Lead</h2>
-                  <button onClick={() => setIsAddLeadOpen(false)} className="close-btn">
-                    <X size={24} />
-                  </button>
-                </div>
-                <form onSubmit={handleAddLead} className="add-lead-form">
-                  <div className="form-group">
-                    <label>Full Name</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Rahul Sharma"
-                      value={newLead.name}
-                      onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Company / Role</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Director at ABC Corp"
-                      value={newLead.company}
-                      onChange={(e) => setNewLead({...newLead, company: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" onClick={() => setIsAddLeadOpen(false)} className="btn-cancel">Cancel</button>
-                    <button type="submit" className="btn-save">Add Relationship</button>
-                  </div>
-                </form>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+        <AddContactModal 
+          isOpen={isAddLeadOpen} 
+          onClose={() => setIsAddLeadOpen(false)} 
+          onAdd={handleAddContact}
+        />
 
         <div className="growth-watermark">
           <h2>GROWTH</h2>

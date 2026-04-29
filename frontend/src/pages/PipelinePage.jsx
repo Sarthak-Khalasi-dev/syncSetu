@@ -1,71 +1,27 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
+import Sidebar from '../components/Sidebar';
+import TopHeader from '../components/TopHeader';
+import AddContactModal from '../components/AddContactModal';
 import {
-  LayoutGrid,
-  TrendingUp,
-  BookUser,
-  Inbox,
-  BellRing,
-  Users,
-  Settings,
-  Search,
-  Bell,
-  Plus,
-  HelpCircle,
   MoreHorizontal,
   CheckCircle2,
   Clock,
   IndianRupee,
-  X,
   ArrowRight,
   Trash2,
-  Edit3,
   Link as LinkIcon,
-  BellOff,
-  User,
-  Zap
+  Users,
+  Plus
 } from 'lucide-react';
 
 const PipelinePage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [selectedColId, setSelectedColId] = useState("col-1");
-  const [editingCardId, setEditingCardId] = useState(null);
-  const [newDeal, setNewDeal] = useState({ name: "", subtitle: "", value: "", label: "LEAD" });
   const [activeMenuId, setActiveMenuId] = useState(null);
-
-  // Notification State
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "New Lead Assigned",
-      desc: "Manoj Gupta has been assigned to your pipeline.",
-      time: "2 mins ago",
-      type: "lead",
-      unread: true
-    },
-    {
-      id: 2,
-      title: "Task Reminder",
-      desc: "Follow up with Ananya Kapoor regarding the site visit.",
-      time: "1 hour ago",
-      type: "task",
-      unread: true
-    },
-    {
-      id: 3,
-      title: "Deal Won! 🎉",
-      desc: "Deepak Verma just closed a ₹90,000 deal.",
-      time: "3 hours ago",
-      type: "success",
-      unread: false
-    }
-  ]);
 
   const [pipelineData, setPipelineData] = useState([
     {
@@ -119,7 +75,6 @@ const PipelinePage = () => {
     let total = 0;
     pipelineData.forEach(col => {
       col.cards.forEach(card => {
-        // Only count cards that match the search criteria
         const name = card.name || "";
         const subtitle = card.subtitle || "";
         const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -134,80 +89,38 @@ const PipelinePage = () => {
     return total.toLocaleString("en-IN");
   }, [pipelineData, searchQuery]);
 
-  const unreadCount = notifications.filter(n => n.unread).length;
-
-  const markAsRead = (id) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, unread: false } : n));
-  };
-
-  const clearAllNotifications = () => {
-    setNotifications([]);
-  };
-
   const openAddModal = (colId = "col-1") => {
-    setIsEditMode(false);
     setSelectedColId(colId);
-    setNewDeal({ name: "", subtitle: "", value: "", label: "LEAD" });
     setIsModalOpen(true);
   };
 
-  const openEditModal = (card, colId) => {
-    setIsEditMode(true);
-    setSelectedColId(colId);
-    setEditingCardId(card.id);
-    setNewDeal({ name: card.name, subtitle: card.subtitle, value: card.value, label: card.label });
-    setIsModalOpen(true);
-    setActiveMenuId(null);
-  };
+  const handleAddDealSubmit = (formData) => {
+    const isClosedCol = formData.stage === "CLOSED" || selectedColId === "col-4";
+    const actualColId = formData.stage ? 
+      (formData.stage === "NEW" ? "col-1" : 
+       formData.stage === "CONTACTED" ? "col-2" : 
+       formData.stage === "INTERESTED" ? "col-3" : "col-4") 
+      : selectedColId;
 
-  const handleSaveDeal = (e) => {
-    e.preventDefault();
-    if (!newDeal.name || !newDeal.value) return;
+    const newEntry = {
+      id: Date.now(),
+      name: formData.name,
+      subtitle: formData.business || "Added via Pipeline",
+      value: "0", 
+      label: formData.stage || "LEAD",
+      completed: isClosedCol
+    };
 
-    if (isEditMode) {
-      setPipelineData(prev => prev.map(col => {
-        if (col.id === selectedColId) {
-          return {
-            ...col,
-            cards: col.cards.map(card => card.id === editingCardId ? { ...card, ...newDeal } : card)
-          };
-        }
-        return col;
-      }));
-    } else {
-      const isClosedCol = selectedColId === "col-4";
-      const newEntry = {
-        id: Date.now(),
-        ...newDeal,
-        completed: isClosedCol,
-        label: isClosedCol ? "WON" : newDeal.label
-      };
-
-      setPipelineData(prev => prev.map(col => {
-        if (col.id === selectedColId) {
-          return {
-            ...col,
-            count: col.count + 1,
-            cards: [newEntry, ...col.cards]
-          };
-        }
-        return col;
-      }));
-
-      // Add notification
-      const newNotif = {
-        id: Date.now(),
-        title: "Deal Created",
-        desc: `${newDeal.name} has been added to ${isClosedCol ? 'Closed' : 'New'} stage.`,
-        time: "Just now",
-        type: "lead",
-        unread: true
-      };
-      setNotifications([newNotif, ...notifications]);
-    }
-
-    setNewDeal({ name: "", subtitle: "", value: "", label: "LEAD" });
-    setIsModalOpen(false);
+    setPipelineData(prev => prev.map(col => {
+      if (col.id === actualColId) {
+        return {
+          ...col,
+          count: col.count + 1,
+          cards: [newEntry, ...col.cards]
+        };
+      }
+      return col;
+    }));
   };
 
   const moveNext = (card, currentColId) => {
@@ -231,19 +144,6 @@ const PipelinePage = () => {
       }
       return col;
     }));
-
-    // Success notification if moved to closed
-    if (nextColId === "col-4") {
-      const successNotif = {
-        id: Date.now(),
-        title: "Deal Closed! 🏆",
-        desc: `${card.name}'s deal has been moved to Closed stage.`,
-        time: "Just now",
-        type: "success",
-        unread: true
-      };
-      setNotifications([successNotif, ...notifications]);
-    }
   };
 
   const deleteDeal = (cardId, colId) => {
@@ -263,142 +163,23 @@ const PipelinePage = () => {
   };
 
   return (
-    <div className="dashboard-container" onClick={() => {
-      setActiveMenuId(null);
-      setIsNotificationOpen(false);
-    }}>
-      <aside className="sidebar" onClick={(e) => e.stopPropagation()}>
-        <div className="sidebar-logo">
-          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
-          SyncSetu
-        </div>
-        <nav className="sidebar-nav">
-          <a onClick={() => navigate("/dashboard")} className="nav-item cursor-pointer">
-            <LayoutGrid size={18} /> Dashboard
-          </a>
-          <a className="nav-item active cursor-pointer">
-            <TrendingUp size={18} /> Pipeline
-          </a>
-          <a className="nav-item cursor-pointer">
-            <BookUser size={18} /> Contacts
-          </a>
-          <a className="nav-item cursor-pointer">
-            <Inbox size={18} /> Inbox
-          </a>
-          <a className="nav-item cursor-pointer">
-            <BellRing size={18} /> Follow-ups
-          </a>
-          <a className="nav-item cursor-pointer">
-            <Users size={18} /> Team
-          </a>
-          <a className="nav-item cursor-pointer">
-            <Settings size={18} /> Settings
-          </a>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <button className="btn-new-message">
-            <Plus size={18} /> New Message
-          </button>
-          <a href="#" className="nav-item nav-item-support">
-            <HelpCircle size={18} /> Help Support
-          </a>
-          <div className="user-profile-widget">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Sterling" className="widget-avatar" />
-            <div className="widget-info">
-              <div className="widget-name">Alex Sterling</div>
-              <div className="widget-role">Premium Account</div>
-            </div>
-          </div>
-        </div>
-      </aside>
+    <div className="dashboard-container" onClick={() => setActiveMenuId(null)}>
+      <Sidebar />
 
       <main className="main-content pipeline-content-wrapper">
-        <header className="pipeline-header" onClick={(e) => e.stopPropagation()}>
-          <div className="header-left">
-            <h1 className="page-title">Pipeline Overview</h1>
-            <div className="pipeline-search-bar">
-              <Search size={18} className="search-icon" />
-              <input 
-                type="text" 
-                placeholder="Search deals..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="header-right">
-            <div className="notification-wrapper">
-              <button 
-                className={`icon-btn ${isNotificationOpen ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsNotificationOpen(!isNotificationOpen);
-                }}
-              >
-                <Bell size={20} />
-                {unreadCount > 0 && <span className="notification-dot"></span>}
-              </button>
-              
-              <AnimatePresence>
-                {isNotificationOpen && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                    className="notification-dropdown"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="dropdown-header">
-                      <h3>Notifications</h3>
-                      {notifications.length > 0 && (
-                        <button className="clear-all-btn" onClick={clearAllNotifications}>Clear all</button>
-                      )}
-                    </div>
-                    <div className="dropdown-body">
-                      {notifications.length === 0 ? (
-                        <div className="empty-state">
-                          <BellOff size={32} />
-                          <p>No notifications yet</p>
-                          <span>We'll let you know when something happens!</span>
-                        </div>
-                      ) : (
-                        notifications.map(notif => (
-                          <div 
-                            key={notif.id} 
-                            className="notification-item" 
-                            onClick={() => markAsRead(notif.id)}
-                          >
-                            <div className={`notif-icon ${
-                              notif.type === 'lead' ? 'bg-teal-light' : 
-                              notif.type === 'task' ? 'bg-slate-light' : 'bg-green-light'
-                            }`}>
-                              {notif.type === 'lead' ? <User size={18} className="text-teal" /> :
-                               notif.type === 'task' ? <Clock size={18} className="text-slate" /> :
-                               <Zap size={18} className="text-green" />}
-                            </div>
-                            <div className="notif-content">
-                              <span className="notif-title">{notif.title}</span>
-                              <span className="notif-desc">{notif.desc}</span>
-                              <span className="notif-time">{notif.time}</span>
-                            </div>
-                            {notif.unread && <div className="unread-glow"></div>}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="forecast-display">
-              <span className="label">Dynamic Forecast</span>
-              <span className="amount">₹ {totalForecast}</span>
-            </div>
-          </div>
-        </header>
+        <TopHeader 
+          title="Pipeline" 
+          searchPlaceholder="Search deals..."
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
 
         <div className="pipeline-scroll-area">
+          <div className="pipeline-forecast-floating">
+             <span className="label">Forecast</span>
+             <span className="amount">₹ {totalForecast}</span>
+          </div>
+
           <motion.div 
             className="pipeline-board-layout"
             initial={{ opacity: 0 }}
@@ -475,9 +256,6 @@ const PipelinePage = () => {
                                       animate={{ opacity: 1, scale: 1, y: 0 }}
                                       className="action-menu"
                                     >
-                                      <button className="menu-item" onClick={() => openEditModal(card, column.id)}>
-                                        <Edit3 size={14} /> Edit Deal
-                                      </button>
                                       <button className="menu-item" onClick={() => copyDealLink(card)}>
                                         <LinkIcon size={14} /> Copy Link
                                       </button>
@@ -513,11 +291,11 @@ const PipelinePage = () => {
                         </div>
                       </motion.div>
                     ))}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            );
-          })}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
 
@@ -541,7 +319,7 @@ const PipelinePage = () => {
               <h3>Weekly Momentum</h3>
               <p>You have 4 deals approaching the closing date this week.</p>
             </div>
-            <button className="schedule-btn">View Schedule</button>
+            <button className="schedule-btn" onClick={() => navigate('/follow-ups')}>View Schedule</button>
           </div>
         </footer>
 
@@ -549,74 +327,11 @@ const PipelinePage = () => {
           <Plus size={28} />
         </button>
 
-        <AnimatePresence>
-          {isModalOpen && (
-            <div className="modal-overlay">
-              <motion.div 
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="modal-header">
-                  <h2>{isEditMode ? "Edit Deal" : "Create New Deal"}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="close-btn">
-                    <X size={24} />
-                  </button>
-                </div>
-                <form onSubmit={handleSaveDeal} className="add-lead-form">
-                  <div className="form-group">
-                    <label>Lead Name</label>
-                    <input 
-                      type="text" 
-                      value={newDeal.name}
-                      onChange={(e) => setNewDeal({...newDeal, name: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Opportunity Detail</label>
-                    <input 
-                      type="text" 
-                      value={newDeal.subtitle}
-                      onChange={(e) => setNewDeal({...newDeal, subtitle: e.target.value})}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Deal Value (₹)</label>
-                    <input 
-                      type="text" 
-                      value={newDeal.value}
-                      onChange={(e) => setNewDeal({...newDeal, value: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Source Label</label>
-                    <select 
-                      className="modal-select"
-                      value={newDeal.label}
-                      onChange={(e) => setNewDeal({...newDeal, label: e.target.value})}
-                    >
-                      <option value="LEAD">LEAD</option>
-                      <option value="INBOUND">INBOUND</option>
-                      <option value="WHATSAPP">WHATSAPP</option>
-                      <option value="HIGH INTENT">HIGH INTENT</option>
-                      <option value="WON">WON</option>
-                    </select>
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" onClick={() => setIsModalOpen(false)} className="btn-cancel">Cancel</button>
-                    <button type="submit" className="btn-save">
-                      {isEditMode ? "Update Deal" : "Save Deal"}
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+        <AddContactModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onAdd={handleAddDealSubmit}
+        />
       </main>
     </div>
   );
