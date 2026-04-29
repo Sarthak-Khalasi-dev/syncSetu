@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -21,7 +21,7 @@ import {
   ArrowRight,
   Trash2,
   Edit3,
-  Link
+  Link as LinkIcon
 } from 'lucide-react';
 
 const PipelinePage = () => {
@@ -72,16 +72,15 @@ const PipelinePage = () => {
     }
   ]);
 
-  // Dynamic Forecast Calculation
   const totalForecast = useMemo(() => {
     let total = 0;
     pipelineData.forEach(col => {
       col.cards.forEach(card => {
-        const val = parseInt(card.value.toString().replace(/[^0-9]/g, '')) || 0;
+        const val = parseInt(card.value.toString().replace(/[^0-9]/g, "")) || 0;
         total += val;
       });
     });
-    return total.toLocaleString('en-IN');
+    return total.toLocaleString("en-IN");
   }, [pipelineData]);
 
   const openAddModal = (colId = "col-1") => {
@@ -174,8 +173,7 @@ const PipelinePage = () => {
 
   const copyDealLink = (card) => {
     const dummyLink = `${window.location.origin}/pipeline/deal/${card.id}`;
-    navigator.clipboard.writeText(dummyLink);
-    alert("Deal link copied to clipboard!");
+    window.navigator.clipboard.writeText(dummyLink);
     setActiveMenuId(null);
   };
 
@@ -184,7 +182,7 @@ const PipelinePage = () => {
       <aside className="sidebar">
         <div className="sidebar-logo">SyncSetu</div>
         <nav className="sidebar-nav">
-          <a onClick={() => navigate('/dashboard')} className="nav-item cursor-pointer">
+          <a onClick={() => navigate("/dashboard")} className="nav-item cursor-pointer">
             <LayoutGrid size={18} /> Dashboard
           </a>
           <a className="nav-item active cursor-pointer">
@@ -283,12 +281,12 @@ const PipelinePage = () => {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="card-top">
-                          <span className={`card-label label-${card.label.toLowerCase().replace(/\s+/g, '-')}`}>
+                          <span className={`card-label label-${card.label.toLowerCase().replace(/\s+/g, "-")}`}>
                             {card.label}
                           </span>
                           
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
-                            {column.id !== 'col-4' && (
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "auto" }}>
+                            {column.id !== "col-4" && (
                               <button 
                                 className="move-btn-mini" 
                                 title="Move to next stage"
@@ -298,11 +296,11 @@ const PipelinePage = () => {
                               </button>
                             )}
                             
-                            <div className="card-menu-wrapper" style={{ position: 'relative' }}>
+                            <div className="card-menu-wrapper" style={{ position: "relative" }}>
                                 <MoreHorizontal 
                                   size={14} 
                                   className="more-btn" 
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setActiveMenuId(activeMenuId === card.id ? null : card.id);
@@ -320,9 +318,9 @@ const PipelinePage = () => {
                                         <Edit3 size={14} /> Edit Deal
                                       </button>
                                       <button className="menu-item" onClick={() => copyDealLink(card)}>
-                                        <Link size={14} /> Copy Link
+                                        <LinkIcon size={14} /> Copy Link
                                       </button>
-                                      <div style={{ height: '1px', background: '#f1f4f3', margin: '4px 0' }}></div>
+                                      <div style={{ height: "1px", background: "#f1f4f3", margin: "4px 0" }}></div>
                                       <button 
                                         className="menu-item delete"
                                         onClick={() => deleteDeal(card.id, column.id)}
@@ -435,16 +433,9 @@ const PipelinePage = () => {
                   <div className="form-group">
                     <label>Source Label</label>
                     <select 
+                      className="modal-select"
                       value={newDeal.label}
                       onChange={(e) => setNewDeal({...newDeal, label: e.target.value})}
-                      style={{
-                        width: '100%',
-                        padding: '14px',
-                        borderRadius: '12px',
-                        border: '1.5px solid #eaf1ed',
-                        background: '#fcfdfd',
-                        outline: 'none'
-                      }}
                     >
                       <option value="LEAD">LEAD</option>
                       <option value="INBOUND">INBOUND</option>
