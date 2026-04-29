@@ -378,6 +378,7 @@ body {
   letter-spacing: -2.5px;
   background: linear-gradient(135deg, #111827 0%, var(--teal-dark) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -756,11 +757,30 @@ body {
   z-index: 5;
 }
 
-.mobile-logo {
-  display: none;
+.sidebar-logo {
+  padding: 32px 16px;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800;
   color: #125143;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(18, 81, 67, 0.1);
+}
+
+.login-logo-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(18, 81, 67, 0.15);
 }
 
 .header-search {

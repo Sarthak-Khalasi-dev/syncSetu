@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
 import {
   LayoutGrid,
   TrendingUp,
@@ -249,7 +250,10 @@ const PipelinePage = () => {
       setIsNotificationOpen(false);
     }}>
       <aside className="sidebar" onClick={(e) => e.stopPropagation()}>
-        <div className="sidebar-logo">SyncSetu</div>
+        <div className="sidebar-logo">
+          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
+          SyncSetu
+        </div>
         <nav className="sidebar-nav">
           <a onClick={() => navigate("/dashboard")} className="nav-item cursor-pointer">
             <LayoutGrid size={18} /> Dashboard

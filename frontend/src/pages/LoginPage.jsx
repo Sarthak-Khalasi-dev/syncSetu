@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, User } from 'lucide-react';
 import { motion } from 'framer-motion';
+import logo from '../assets/logo.png';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -95,9 +96,7 @@ const LoginPage = () => {
         <div className="right-content-wrapper">
           <div className="right-inner">
             <div className="brand-title">
-              <div className="logo-icon">
-                <MessageSquare size={16} fill="white" />
-              </div>
+              <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
               SyncSetu
             </div>
           

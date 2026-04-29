@@ -29,6 +29,7 @@ import {
 
 import { useState, useEffect, useRef } from 'react';
 import EmojiPicker from 'emoji-picker-react';
+import logo from '../assets/logo.png';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -192,7 +193,10 @@ const DashboardPage = () => {
     <div className="dashboard-container" onClick={() => setIsNotificationOpen(false)}>
       {/* Sidebar */}
       <aside className="sidebar" onClick={(e) => e.stopPropagation()}>
-        <div className="sidebar-logo">SyncSetu</div>
+        <div className="sidebar-logo">
+          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
+          SyncSetu
+        </div>
         <nav className="sidebar-nav">
           <a href="#" className="nav-item active">
             <LayoutGrid size={18} /> Dashboard
