@@ -7,6 +7,7 @@ import ContactsPage from './pages/ContactsPage';
 import InboxPage from './pages/InboxPage';
 import FollowUpsPage from './pages/FollowUpsPage';
 import TeamPage from './pages/TeamPage';
+import SettingsPage from './pages/SettingsPage';
 import ComingSoonPage from './pages/ComingSoonPage';
 import './index.css';
 
@@ -21,7 +22,8 @@ function App() {
         <Route path="/inbox" element={<InboxPage />} />
         <Route path="/follow-ups" element={<FollowUpsPage />} />
         <Route path="/team" element={<TeamPage />} />
-        <Route path="/settings" element={<ComingSoonPage title="Settings" />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/help" element={<ComingSoonPage title="Help" />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
