@@ -27,37 +27,54 @@ const LoginPage = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
       className="layout-container"
     >
       {/* Left Side: Mockup Visuals */}
       <div className="split-left">
-        <div className="ui-mockup-wrapper">
+        <div className="ui-mockup-wrapper-framer">
           <motion.div 
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="main-card"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="main-card premium-glass"
           >
             <div className="header-row">
-              <div className="icon-box">
+              <div className="icon-box-glow">
                 <MessageSquare />
               </div>
               <div className="header-text">
-                <h3>Quiet Conversations</h3>
+                <h3>SyncSetu Hub</h3>
                 <p>Real-time engagement without the noise.</p>
               </div>
             </div>
 
             <div className="chat-container">
-              <div className="chat-bubble chat-left">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="chat-bubble chat-left"
+              >
                 Hello! I saw your recent collection. Can we discuss a custom order for our team?
-              </div>
-              <div className="chat-bubble chat-right">
-                Absolutely! I'd love to help with that. Let's find a time to chat about your specific requirements.
-              </div>
-              <div className="chat-bubble chat-left" style={{ marginBottom: 0 }}>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+                className="chat-bubble chat-right"
+              >
+                Absolutely! I'd love to help with that. Let's find a time to chat about your requirements.
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.1 }}
+                className="chat-bubble chat-left" 
+                style={{ marginBottom: 0 }}
+              >
                 Perfect. Looking forward to it.
-              </div>
+              </motion.div>
             </div>
 
             <div className="bottom-widgets">
@@ -65,27 +82,30 @@ const LoginPage = () => {
                 <div className="widget-label">NEW LEADS</div>
                 <div className="widget-value">12</div>
               </div>
-              <div className="widget-card" style={{ opacity: 0 }}></div>
+              <div className="widget-card">
+                <div className="widget-label">CONVERSION</div>
+                <div className="widget-value">84%</div>
+              </div>
             </div>
           </motion.div>
 
           <motion.div 
-            initial={{ x: 40, y: 20, opacity: 0 }}
-            animate={{ x: 0, y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="testimonial-card"
+            initial={{ opacity: 0, scale: 0.8, x: 40 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ delay: 1.3, duration: 0.6 }}
+            className="testimonial-card premium-shadow"
           >
             <div className="user-row">
-              <div className="avatar">
+              <div className="avatar-gradient">
                 <User />
               </div>
               <div className="user-info">
                 <div className="name">Julian Hayes</div>
-                <div className="role">SYNCSETU USER</div>
+                <div className="role">Verified SyncSetu Pro</div>
               </div>
             </div>
             <div className="testimonial-text">
-              "The most peaceful CRM experience I've ever had. It just flows."
+              "The most peaceful CRM experience I've ever had. It just flows perfectly with our workflow."
             </div>
           </motion.div>
         </div>
@@ -93,42 +113,53 @@ const LoginPage = () => {
 
       {/* Right Side: Login Form */}
       <div className="split-right">
-        <div className="right-content-wrapper">
+        <motion.div 
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="right-content-wrapper"
+        >
           <div className="right-inner">
             <div className="brand-title">
-              <img src={logo} alt="SyncSetu Logo" className="brand-logo-img" />
-              SyncSetu
+              <div className="brand-logo-wrapper">
+                <img src={logo} alt="SyncSetu Logo" className="brand-logo-img-v2" />
+              </div>
+              <span className="brand-name-v2">SyncSetu</span>
             </div>
           
-          <h1 className="hero-title">
+          <h1 className="hero-title-v2">
             Quietly<br/>
             connected.
           </h1>
           
-          <p className="hero-subtitle">
-            The premium workspace where client relationships become calm conversations.
+          <p className="hero-subtitle-v2">
+            The premium workspace where client relationships become calm, productive conversations.
           </p>
           
-          <button className="btn-whatsapp">
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="btn-whatsapp-premium"
+          >
             <MessageSquare size={20} fill="currentColor" /> Connect WhatsApp
-          </button>
+          </motion.button>
           
-          <div className="divider">
+          <div className="divider-premium">
             <span>OR USE YOUR EMAIL</span>
           </div>
           
           <form onSubmit={formik.handleSubmit}>
-            <div className="form-group">
+            <div className="form-group-premium">
               <div className="form-label-row">
-                <label className="form-label">Work Email</label>
+                <label className="form-label-v2">Work Email</label>
                 {formik.touched.email && formik.errors.email ? (
-                  <div className="text-red-500 text-xs font-semibold">{formik.errors.email}</div>
+                  <div className="error-text">{formik.errors.email}</div>
                 ) : null}
               </div>
               <input 
                 name="email"
                 type="email" 
-                className={`form-input ${formik.touched.email && formik.errors.email ? 'border-red-500' : ''}`}
+                className={`form-input-v2 ${formik.touched.email && formik.errors.email ? 'error' : ''}`}
                 placeholder="name@company.com" 
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -136,18 +167,18 @@ const LoginPage = () => {
               />
             </div>
             
-            <div className="form-group">
+            <div className="form-group-premium">
               <div className="form-label-row">
-                <label className="form-label">Password</label>
-                <a href="#" className="forgot-link">FORGOT?</a>
+                <label className="form-label-v2">Password</label>
+                <a href="#" className="forgot-link-v2">FORGOT?</a>
               </div>
               {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 text-xs font-semibold mb-1">{formik.errors.password}</div>
+                <div className="error-text mb-1">{formik.errors.password}</div>
               ) : null}
               <input 
                 name="password"
                 type="password" 
-                className={`form-input ${formik.touched.password && formik.errors.password ? 'border-red-500' : ''}`}
+                className={`form-input-v2 ${formik.touched.password && formik.errors.password ? 'error' : ''}`}
                 placeholder="••••••••" 
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -155,16 +186,21 @@ const LoginPage = () => {
               />
             </div>
             
-            <button type="submit" className="btn-submit">
+            <motion.button 
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              type="submit" 
+              className="btn-submit-premium"
+            >
               Enter the Quiet
-            </button>
+            </motion.button>
           </form>
           </div>
           
-          <div className="auth-footer">
+          <div className="auth-footer-v2">
             Don't have an account? <a href="#">Talk to sales</a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );

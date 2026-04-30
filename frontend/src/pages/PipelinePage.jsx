@@ -163,8 +163,7 @@ const PipelinePage = () => {
   };
 
   return (
-    <div className="dashboard-container" onClick={() => setActiveMenuId(null)}>
-      <Sidebar />
+    <div className="page-content-wrapper" onClick={() => setActiveMenuId(null)}>
 
       <main className="main-content pipeline-content-wrapper">
         <TopHeader 

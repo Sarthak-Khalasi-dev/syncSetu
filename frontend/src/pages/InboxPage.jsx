@@ -131,8 +131,7 @@ const InboxPage = () => {
   };
 
   return (
-    <div className="inbox-page-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       <main className="inbox-main-content">
         {/* Column 2: Conversations List */}

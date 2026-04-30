@@ -102,8 +102,7 @@ const FollowUpsPage = () => {
   ];
 
   return (
-    <div className="follow-ups-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       <main className="follow-ups-main">
         <header className="follow-ups-header">

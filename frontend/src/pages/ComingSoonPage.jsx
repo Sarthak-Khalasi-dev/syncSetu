@@ -1,10 +1,8 @@
-import Sidebar from '../components/Sidebar';
 import { motion } from 'framer-motion';
 
 const ComingSoonPage = ({ title }) => {
   return (
-    <div className="dashboard-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
       <main className="main-content flex items-center justify-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}

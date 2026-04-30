@@ -78,7 +78,7 @@ const AddContactModal = ({ isOpen, onClose, onAdd }) => {
                     <Mail size={18} className="field-icon" />
                     <input 
                       type="email" 
-                      placeholder="advait.m@liaison.in" 
+                      placeholder="advait.m@syncsetu.in" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />

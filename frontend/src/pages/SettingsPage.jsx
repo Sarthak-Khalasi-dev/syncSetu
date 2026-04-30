@@ -19,8 +19,7 @@ import Sidebar from '../components/Sidebar';
 
 const SettingsPage = () => {
   return (
-    <div className="settings-page-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       <main className="settings-main-content">
         <header className="settings-header-v2">
@@ -51,11 +50,11 @@ const SettingsPage = () => {
               <div className="form-grid-v2">
                 <div className="input-group-v3">
                   <label>WORKSPACE NAME</label>
-                  <input type="text" defaultValue="Sterling & Co. Liaison" />
+                  <input type="text" defaultValue="Sterling & Co. SyncSetu" />
                 </div>
                 <div className="input-group-v3">
                   <label>PRIMARY DOMAIN</label>
-                  <input type="text" defaultValue="sterling.liaison.crm" />
+                  <input type="text" defaultValue="sterling.syncsetu.crm" />
                 </div>
               </div>
 

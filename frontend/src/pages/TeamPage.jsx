@@ -75,8 +75,7 @@ const TeamPage = () => {
   ];
 
   return (
-    <div className="team-page-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       <main className="team-main-content">
         <header className="team-header-v2">
@@ -160,7 +159,7 @@ const TeamPage = () => {
             {/* Quick Add Card */}
             <div className="side-card quick-add-card">
               <h2 className="side-card-title">Quick Add</h2>
-              <p className="side-card-desc">Instantly add a new sales representative or admin to your liaison network.</p>
+              <p className="side-card-desc">Instantly add a new sales representative or admin to your SyncSetu network.</p>
               
               <div className="quick-add-form">
                 <div className="input-group-v2">

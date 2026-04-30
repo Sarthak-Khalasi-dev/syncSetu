@@ -131,8 +131,7 @@ const DashboardPage = () => {
   );
 
   return (
-    <div className="dashboard-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       {/* Main Content */}
       <main className="main-content">

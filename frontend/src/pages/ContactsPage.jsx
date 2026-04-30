@@ -115,8 +115,7 @@ const ContactsPage = () => {
   });
 
   return (
-    <div className="dashboard-container">
-      <Sidebar />
+    <div className="page-content-wrapper">
 
       <main className="main-content contacts-layout">
         <TopHeader 

@@ -28,14 +28,14 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar-liaison">
+    <aside className="sidebar-syncsetu">
       <div className="sidebar-brand">
         <motion.h1 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="brand-name"
         >
-          Liaison
+          SyncSetu
         </motion.h1>
       </div>
 
