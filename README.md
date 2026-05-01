@@ -113,26 +113,31 @@ SyncSetu combines the familiarity of WhatsApp with smart, aesthetically premium 
 ## 📁 Project Folder Structure
 ```text
 syncsetu/
-├── frontend/
+├── frontend/           # React + Vite Frontend
 │   ├── public/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── features/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── styles/
-│   │   ├── redux/
-│   │   ├── routes/
-│   │   ├── config/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── tailwind.config.js
-│   ├── vite.config.js
-│   └── package.json
-└── backend/
+│   │   ├── components/ # Reusable UI components (Sidebar, TopHeader, etc.)
+│   │   ├── pages/      # Page components (Dashboard, Contacts, etc.)
+│   │   ├── services/   # API service layer (Axios)
+│   │   ├── store/      # Redux state management
+│   │   ├── assets/     # Static assets
+│   │   ├── features/   # Feature-specific logic
+│   │   ├── hooks/      # Custom React hooks
+│   │   ├── utils/      # Helper functions
+│   │   ├── App.jsx     # Main App component
+│   │   ├── index.css   # Global styles
+│   │   ├── dark-mode.css # Premium dark mode styles
+│   │   └── main.jsx    # Entry point
+│   ├── package.json
+│   └── vite.config.js
+└── backend/            # Node.js + Express Backend
+    ├── config/         # Database & Config
+    ├── controllers/    # Request logic
+    ├── models/         # Mongoose schemas (Contact, Lead)
+    ├── routes/         # API endpoints
+    ├── .env            # Environment variables
+    ├── server.js       # Entry point
+    └── package.json
 ```
 
 ---

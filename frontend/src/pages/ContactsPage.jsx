@@ -13,71 +13,15 @@ import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import AddContactModal from '../components/AddContactModal';
+import api from '../services/api';
 
 const ContactsPage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [contactsData, setContactsData] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("ALL");
-
-  const [contactsData, setContactsData] = useState([
-    {
-      id: 1,
-      name: "Arjun Mehta",
-      role: "CTO, Vertex Infotech",
-      location: "Mumbai, MH",
-      status: "NEW",
-      statusType: "green",
-      value: "4,50,000",
-      time: "2 hours ago",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
-    },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      role: "Director, Green Horizons",
-      location: "Bangalore, KA",
-      status: "FOLLOW-UP",
-      statusType: "blue",
-      value: "12,20,000",
-      time: "Yesterday",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg"
-    },
-    {
-      id: 3,
-      name: "Rohan Das",
-      role: "Founder, Bloom Media",
-      location: "New Delhi, DL",
-      status: "WON",
-      statusType: "teal",
-      value: "8,00,000",
-      time: "3 days ago",
-      avatar: "https://randomuser.me/api/portraits/men/45.jpg"
-    },
-    {
-      id: 4,
-      name: "Ananya Iyer",
-      role: "VP Operations, Logistics Pro",
-      location: "Chennai, TN",
-      status: "FOLLOW-UP",
-      statusType: "blue",
-      value: "2,10,000",
-      time: "5 hours ago",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
-    },
-    {
-      id: 5,
-      name: "Vikram Singh",
-      role: "Managing Partner, Singh & Co",
-      location: "Gurugram, HR",
-      status: "LOST",
-      statusType: "red",
-      value: "18,50,000",
-      time: "1 week ago",
-      avatar: "https://randomuser.me/api/portraits/men/22.jpg"
-    }
-  ]);
 
   const filterOptions = [
     { label: "All Contacts", value: "ALL" },
@@ -87,21 +31,34 @@ const ContactsPage = () => {
     { label: "Lost Deals", value: "LOST" }
   ];
 
-  const handleAddContact = (formData) => {
-    const newContact = {
-      id: Date.now(),
-      name: formData.name,
-      role: formData.business || "Independent Professional",
-      location: "India Region",
-      status: formData.stage || "NEW",
-      statusType: formData.stage === "CLOSED" || formData.stage === "WON" ? "teal" : 
-                  formData.stage === "FOLLOW-UP" ? "blue" : "green",
-      value: "0",
-      time: "Just now",
-      avatar: `https://avatar.iran.liara.run/public/${Math.floor(Math.random() * 50)}`
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const res = await api.get('/contacts');
+        setContactsData(res.data.data);
+      } catch (err) {
+        console.error('Error fetching contacts:', err);
+      }
     };
+    fetchContacts();
+  }, []);
 
-    setContactsData([newContact, ...contactsData]);
+  const handleAddContact = async (formData) => {
+    try {
+      const newContact = {
+        name: formData.name,
+        role: formData.business || "Independent Professional",
+        location: "India Region",
+        status: formData.stage || "NEW",
+        value: parseInt(formData.value) || 0,
+      };
+
+      const res = await api.post('/contacts', newContact);
+      setContactsData(prev => [res.data.data, ...prev]);
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error('Error adding contact:', err);
+    }
   };
 
   const filteredContacts = contactsData.filter(contact => {
@@ -190,14 +147,14 @@ const ContactsPage = () => {
                 <AnimatePresence mode="popLayout">
                   {filteredContacts.map((contact, idx) => (
                     <motion.tr 
-                      key={contact.id}
+                      key={contact._id || contact.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                     >
                       <td>
                         <div className="contact-cell">
-                          <img src={contact.avatar} alt={contact.name} className="table-avatar" />
+                          <img src={contact.avatar || 'https://randomuser.me/api/portraits/lego/1.jpg'} alt={contact.name} className="table-avatar" />
                           <div className="contact-details">
                             <span className="name">{contact.name}</span>
                             <span className="role">{contact.role}</span>
@@ -206,7 +163,7 @@ const ContactsPage = () => {
                       </td>
                       <td className="location-cell">{contact.location}</td>
                       <td>
-                        <span className={`status-pill pill-${contact.statusType}`}>
+                        <span className={`status-pill pill-${contact.statusType || (contact.status === 'WON' ? 'teal' : contact.status === 'FOLLOW-UP' ? 'blue' : contact.status === 'LOST' ? 'red' : 'green')}`}>
                           {contact.status}
                         </span>
                       </td>

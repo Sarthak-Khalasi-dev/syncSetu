@@ -18,33 +18,14 @@ import EmojiPicker from 'emoji-picker-react';
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import AddContactModal from '../components/AddContactModal';
+import api from '../services/api';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  const [leads, setLeads] = useState([
-    {
-      id: 1,
-      name: "Rajesh Deshmukh",
-      company: "Managing Director, Tech-Hind Solutions",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      badge: "NEW",
-      badgeType: "green",
-      time: "Updated 2h ago"
-    },
-    {
-      id: 2,
-      name: "Ananya Kapoor",
-      company: "Creative Lead, Urban Studio Mumbai",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-      badge: "FOLLOW-UP",
-      badgeType: "blue",
-      time: "Updated 5h ago"
-    }
-  ]);
-
+  const [leads, setLeads] = useState([]);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -63,9 +44,27 @@ const DashboardPage = () => {
   ]);
   const [inputText, setInputText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [contactCount, setContactCount] = useState(0);
   const chatEndRef = useRef(null);
   const isFirstRender = useRef(true);
   const emojiPickerRef = useRef(null);
+
+  // Fetch initial data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [leadsRes, contactsRes] = await Promise.all([
+          api.get('/leads'),
+          api.get('/contacts')
+        ]);
+        setLeads(leadsRes.data.data);
+        setContactCount(contactsRes.data.count);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -111,19 +110,21 @@ const DashboardPage = () => {
     setMessages(prev => prev.filter(m => m.id !== id));
   };
 
-  const handleAddContact = (formData) => {
-    const lead = {
-      id: Date.now(),
-      name: formData.name,
-      company: formData.business || "New Relationship",
-      avatar: `https://avatar.iran.liara.run/public/${Math.floor(Math.random() * 50)}`,
-      badge: formData.stage || "NEW",
-      badgeType: formData.stage === "CLOSED" ? "teal" : "green",
-      time: "Just now"
-    };
+  const handleAddContact = async (formData) => {
+    try {
+      const newLead = {
+        name: formData.name,
+        company: formData.business || "New Relationship",
+        time: "Just now",
+        status: 'New'
+      };
 
-    setLeads([lead, ...leads]);
-    setIsAddLeadOpen(false);
+      const res = await api.post('/leads', newLead);
+      setLeads(prev => [res.data.data, ...prev]);
+      setIsAddLeadOpen(false);
+    } catch (err) {
+      console.error('Error adding lead:', err);
+    }
   };
 
   const onEmojiClick = (emojiObject) => {
@@ -156,13 +157,13 @@ const DashboardPage = () => {
           <div className="kpi-grid">
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="premium-kpi-card border-green">
               <div className="kpi-header">
-                <h3>PROJECTED REVENUE</h3>
-                <IndianRupee size={18} className="kpi-icon text-teal" />
+                <h3>TOTAL RELATIONSHIPS</h3>
+                <UserPlus size={18} className="kpi-icon text-teal" />
               </div>
               <div className="kpi-body">
-                <h2>₹12.4M</h2>
+                <h2>{contactCount}</h2>
                 <div className="trend text-teal">
-                  <ArrowUpRight size={14} /> +14.2% this month
+                  <ArrowUpRight size={14} /> Real-time Sync
                 </div>
               </div>
             </motion.div>
@@ -216,20 +217,22 @@ const DashboardPage = () => {
                 ) : (
                   filteredLeads.map((lead, index) => (
                     <motion.div 
-                      key={lead.id} 
+                      key={lead._id || lead.id} 
                       initial={{ x: -20, opacity: 0 }} 
                       animate={{ x: 0, opacity: 1 }} 
                       transition={{ delay: 0.4 + (index * 0.1) }}
                       className="premium-lead-item"
                     >
-                      <img src={lead.avatar} alt={lead.name} className="lead-avatar" />
+                      <img src={lead.avatar || 'https://randomuser.me/api/portraits/lego/1.jpg'} alt={lead.name} className="lead-avatar" />
                       <div className="lead-info">
                         <div className="lead-name-row">
                           <h3>{lead.name}</h3>
-                          <span className={`badge badge-${lead.badgeType}`}>{lead.badge}</span>
+                          <span className={`badge badge-${lead.badgeType || (lead.status === 'New' ? 'green' : 'blue')}`}>
+                            {lead.badge || lead.status || 'NEW'}
+                          </span>
                         </div>
                         <p className="lead-company">{lead.company}</p>
-                        <span className="lead-time">{lead.time}</span>
+                        <span className="lead-time">{lead.time || 'Recently updated'}</span>
                       </div>
                     </motion.div>
                   ))
