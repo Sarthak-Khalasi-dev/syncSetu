@@ -244,7 +244,7 @@ const DashboardPage = () => {
                   <h2>Ananya Kapoor</h2>
                 </div>
                 <div className="chat-actions">
-                  <Search size={18} className="cursor-pointer" />
+
                   <MoreVertical size={18} className="cursor-pointer" />
                 </div>
               </div>

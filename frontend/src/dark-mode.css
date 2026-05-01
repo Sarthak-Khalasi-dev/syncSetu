@@ -922,7 +922,7 @@ html.dark .btn-discard:hover {
 }
 
 /* ==========================================================
-   PREMIUM POLISH — Visual Excellence & Depth
+   PREMIUM POLISH ï¿½ Visual Excellence & Depth
    ========================================================== */
 
 html.dark .premium-container,
@@ -1090,7 +1090,7 @@ html.dark .premium-container h3 {
 }
 
 /* ==========================================================
-   TOP HEADER — State-of-the-art Navigation
+   TOP HEADER ï¿½ State-of-the-art Navigation
    ========================================================== */
 
 html.dark .dashboard-header {
@@ -1221,3 +1221,40 @@ html.dark .notif-desc {
   color: #8696a0 !important;
 }
 
+html.dark .notif-time {
+  color: #8696a0 !important;
+}
+
+html.dark .unread-glow {
+  background: #00a884 !important;
+  box-shadow: 0 0 10px rgba(0, 168, 132, 0.4) !important;
+}
+
+html.dark .notification-dot {
+  border-color: #111b21 !important;
+  background-color: #ef4444 !important;
+}
+
+html.dark .empty-state {
+  color: #8696a0 !important;
+  padding: 40px 20px !important;
+}
+
+html.dark .empty-state p {
+  color: #e9edef !important;
+  font-weight: 600 !important;
+}
+
+html.dark .empty-state span {
+  color: #8696a0 !important;
+  font-size: 13px !important;
+}
+
+/* Notification Icons */
+html.dark .notif-icon.bg-teal-light { background: rgba(0, 168, 132, 0.1) !important; }
+html.dark .notif-icon.bg-slate-light { background: rgba(134, 150, 160, 0.1) !important; }
+html.dark .notif-icon.bg-green-light { background: rgba(0, 168, 132, 0.1) !important; }
+
+html.dark .notif-icon .text-teal { color: #00a884 !important; }
+html.dark .notif-icon .text-slate { color: #8696a0 !important; }
+html.dark .notif-icon .text-green { color: #00a884 !important; }

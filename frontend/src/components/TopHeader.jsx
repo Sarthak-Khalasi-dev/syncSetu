@@ -170,7 +170,7 @@ const TopHeader = ({
           </div>
         )}
 
-        <button className="icon-btn mobile-only"><Search size={20} /></button>
+
         <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Profile" className="user-avatar" />
       </div>
     </header>

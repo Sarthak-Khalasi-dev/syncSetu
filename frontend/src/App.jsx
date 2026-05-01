@@ -27,7 +27,7 @@ const MainLayout = () => {
   }, [location]);
 
   return (
-    <div className="app-container">
+    <div className="app-layout">
       <Sidebar />
       <div className="main-content-wrapper">
         <Outlet />

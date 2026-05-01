@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
   Bell, 
@@ -17,6 +17,12 @@ import { useState } from 'react';
 
 const TeamPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeMenuId, setActiveMenuId] = useState(null);
+  const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
+  const [broadcastText, setBroadcastText] = useState("");
+  const [selectedRole, setSelectedRole] = useState("Sales");
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
   const teamMembers = [
     {
       id: 1,
@@ -142,8 +148,34 @@ const TeamPage = () => {
                     </div>
                   </div>
 
-                  <button className="member-more-btn">
+                  <button className="member-more-btn" onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveMenuId(activeMenuId === member.id ? null : member.id);
+                  }}>
                     <MoreVertical size={20} />
+                    
+                    <AnimatePresence>
+                      {activeMenuId === member.id && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                          className="member-action-dropdown premium-container"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
+                            <Users size={16} /> View Profile
+                          </div>
+                          <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
+                            <Activity size={16} /> Sync WhatsApp
+                          </div>
+                          <div className="dropdown-divider"></div>
+                          <div className="dropdown-item danger" onClick={() => setActiveMenuId(null)}>
+                            <AlertTriangle size={16} /> Reset Session
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </button>
                 </motion.div>
               ))}
@@ -164,12 +196,41 @@ const TeamPage = () => {
                 </div>
                 <div className="input-group-v2">
                   <label>ROLE</label>
-                  <div className="select-wrapper-v2">
-                    <span>Sales</span>
+                  <div 
+                    className="select-wrapper-v2" 
+                    onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                    style={{ position: 'relative', cursor: 'pointer' }}
+                  >
+                    <span>{selectedRole}</span>
                     <ChevronDown size={18} />
+                    
+                    <AnimatePresence>
+                      {isRoleDropdownOpen && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="role-select-dropdown"
+                        >
+                          {["Sales", "Admin", "Manager", "Owner"].map(role => (
+                            <div 
+                              key={role} 
+                              className="role-option"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedRole(role);
+                                setIsRoleDropdownOpen(false);
+                              }}
+                            >
+                              {role}
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
-                <button className="btn-send-invitation">Send Invitation</button>
+                <button className="btn-send-invitation" onClick={() => alert("Invitation sent to the new member!")}>Send Invitation</button>
               </div>
             </div>
 
@@ -224,10 +285,82 @@ const TeamPage = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="btn-broadcast-floating"
+          onClick={() => setIsBroadcastModalOpen(true)}
         >
           <MessageSquare size={20} />
           <span>Broadcast Message</span>
         </motion.button>
+
+        {/* Broadcast Modal */}
+        <AnimatePresence>
+          {isBroadcastModalOpen && (
+            <div className="modal-overlay-v2" onClick={() => setIsBroadcastModalOpen(false)}>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="broadcast-modal-premium"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="modal-header-v2">
+                  <div className="modal-header-left">
+                    <div className="icon-badge-v2">
+                      <MessageSquare size={20} className="text-teal" />
+                    </div>
+                    <div>
+                      <h3>Broadcast Message</h3>
+                      <p>Send a global update to the entire sales force.</p>
+                    </div>
+                  </div>
+                  <button className="close-btn-v2" onClick={() => setIsBroadcastModalOpen(false)}>×</button>
+                </div>
+                
+                <div className="modal-body-v2">
+                  <div className="target-indicator">
+                    <div className="target-pill">
+                      <Users size={14} /> 8 Recipients
+                    </div>
+                    <div className="target-pill">
+                      <CheckCircle size={14} /> All Regions
+                    </div>
+                  </div>
+                  
+                  <textarea 
+                    className="broadcast-textarea" 
+                    placeholder="Type your announcement here..."
+                    value={broadcastText}
+                    onChange={(e) => setBroadcastText(e.target.value)}
+                  ></textarea>
+                  
+                  <div className="broadcast-options">
+                    <div className="option-item">
+                      <input type="checkbox" id="urgent" />
+                      <label htmlFor="urgent">Mark as high priority</label>
+                    </div>
+                    <div className="option-item">
+                      <input type="checkbox" id="receipt" defaultChecked />
+                      <label htmlFor="receipt">Request read receipts</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="modal-footer-v2">
+                  <button className="btn-cancel-v2" onClick={() => setIsBroadcastModalOpen(false)}>Cancel</button>
+                  <button 
+                    className="btn-send-broadcast" 
+                    onClick={() => {
+                      alert("Broadcast sent successfully!");
+                      setIsBroadcastModalOpen(false);
+                      setBroadcastText("");
+                    }}
+                  >
+                    Deploy Broadcast
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

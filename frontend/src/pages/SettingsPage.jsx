@@ -22,6 +22,22 @@ import { useState, useEffect } from 'react';
 const SettingsPage = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
   const [searchQuery, setSearchQuery] = useState("");
+  const [workspaceLogo, setWorkspaceLogo] = useState(null);
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setWorkspaceLogo(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerLogoUpload = () => {
+    document.getElementById('logo-upload-input').click();
+  };
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
@@ -72,13 +88,24 @@ const SettingsPage = () => {
                 <label>WORKSPACE LOGO</label>
                 <div className="logo-upload-box">
                   <div className="logo-icon-wrapper">
-                    <ImageIcon size={24} className="logo-icon" />
+                    {workspaceLogo ? (
+                      <img src={workspaceLogo} alt="Workspace Logo" className="uploaded-logo-preview" />
+                    ) : (
+                      <ImageIcon size={24} className="logo-icon" />
+                    )}
                   </div>
                   <div className="logo-info">
-                    <span className="logo-name">Company Identity</span>
+                    <span className="logo-name">{workspaceLogo ? 'Custom Identity' : 'Company Identity'}</span>
                     <span className="logo-meta">SVG, PNG or JPG (max. 800×400px)</span>
                   </div>
-                  <button className="btn-replace-logo">Replace</button>
+                  <input 
+                    type="file" 
+                    id="logo-upload-input" 
+                    hidden 
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                  />
+                  <button className="btn-replace-logo" onClick={triggerLogoUpload}>Replace</button>
                 </div>
               </div>
 
