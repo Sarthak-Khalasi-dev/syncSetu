@@ -62,8 +62,8 @@ syncsetu/
 ---
 
 ## 📸 Screenshots
-![Dashboard]((https://res.cloudinary.com/dsrczav6p/image/upload/v1777725647/Screenshot_2026-05-02_180842_kzuivg.png)
-)
+![Dashboard](https://res.cloudinary.com/dsrczav6p/image/upload/v1777725647/Screenshot_2026-05-02_180842_kzuivg.png)
+
 ![Contacts](https://res.cloudinary.com/dsrczav6p/image/upload/v1777725650/Screenshot_2026-05-02_181019_g4pl3g.png)
 ![Login](https://res.cloudinary.com/dsrczav6p/image/upload/v1777725487/Screenshot_2026-05-02_180629_pyahlu.png)
 
