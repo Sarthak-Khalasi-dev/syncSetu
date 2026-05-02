@@ -8,6 +8,32 @@ import * as Yup from 'yup';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [loginMode, setLoginMode] = React.useState('login'); // login, whatsapp, otp
+  const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [otp, setOtp] = React.useState(['', '', '', '', '', '']);
+
+  const handleSendOTP = () => {
+    if (phoneNumber.length === 10) {
+      setLoginMode('otp');
+    }
+  };
+
+  const handleOtpChange = (element, index) => {
+    if (isNaN(element.value)) return false;
+
+    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+    if (element.nextSibling) {
+      element.nextSibling.focus();
+    }
+  };
+
+  const handleVerifyOTP = () => {
+    const otpValue = otp.join('');
+    if (otpValue.length === 6) {
+      navigate('/dashboard');
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -136,65 +162,144 @@ const LoginPage = () => {
             The premium workspace where client relationships become calm, productive conversations.
           </p>
           
-          <motion.button 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-whatsapp-premium"
-          >
-            <MessageSquare size={20} fill="currentColor" /> Connect WhatsApp
-          </motion.button>
-          
-          <div className="divider-premium">
-            <span>OR USE YOUR EMAIL</span>
-          </div>
-          
-          <form onSubmit={formik.handleSubmit}>
-            <div className="form-group-premium">
-              <div className="form-label-row">
-                <label className="form-label-v2">Work Email</label>
-                {formik.touched.email && formik.errors.email ? (
-                  <div className="error-text">{formik.errors.email}</div>
-                ) : null}
-              </div>
-              <input 
-                name="email"
-                type="email" 
-                className={`form-input-v2 ${formik.touched.email && formik.errors.email ? 'error' : ''}`}
-                placeholder="name@company.com" 
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-              />
-            </div>
-            
-            <div className="form-group-premium">
-              <div className="form-label-row">
-                <label className="form-label-v2">Password</label>
-                <a href="#" className="forgot-link-v2">FORGOT?</a>
-              </div>
-              {formik.touched.password && formik.errors.password ? (
-                <div className="error-text mb-1">{formik.errors.password}</div>
-              ) : null}
-              <input 
-                name="password"
-                type="password" 
-                className={`form-input-v2 ${formik.touched.password && formik.errors.password ? 'error' : ''}`}
-                placeholder="••••••••" 
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-              />
-            </div>
-            
-            <motion.button 
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              type="submit" 
-              className="btn-submit-premium"
-            >
-              Enter the Quiet
-            </motion.button>
-          </form>
+            {loginMode === 'login' && (
+              <>
+                <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-whatsapp-premium"
+                  onClick={() => setLoginMode('whatsapp')}
+                >
+                  <MessageSquare size={20} fill="currentColor" /> Connect WhatsApp
+                </motion.button>
+                
+                <div className="divider-premium">
+                  <span>OR USE YOUR EMAIL</span>
+                </div>
+                
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="form-group-premium">
+                    <div className="form-label-row">
+                      <label className="form-label-v2">Work Email</label>
+                      {formik.touched.email && formik.errors.email ? (
+                        <div className="error-text">{formik.errors.email}</div>
+                      ) : null}
+                    </div>
+                    <input 
+                      name="email"
+                      type="email" 
+                      className={`form-input-v2 ${formik.touched.email && formik.errors.email ? 'error' : ''}`}
+                      placeholder="name@company.com" 
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.email}
+                    />
+                  </div>
+                  
+                  <div className="form-group-premium">
+                    <div className="form-label-row">
+                      <label className="form-label-v2">Password</label>
+                      <a href="#" className="forgot-link-v2">FORGOT?</a>
+                    </div>
+                    {formik.touched.password && formik.errors.password ? (
+                      <div className="error-text mb-1">{formik.errors.password}</div>
+                    ) : null}
+                    <input 
+                      name="password"
+                      type="password" 
+                      className={`form-input-v2 ${formik.touched.password && formik.errors.password ? 'error' : ''}`}
+                      placeholder="••••••••" 
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                    />
+                  </div>
+                  
+                  <motion.button 
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    type="submit" 
+                    className="btn-submit-premium"
+                  >
+                    Enter the Quiet
+                  </motion.button>
+                </form>
+              </>
+            )}
+
+            {loginMode === 'whatsapp' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="whatsapp-flow-container"
+              >
+                <button className="btn-back-text" onClick={() => setLoginMode('login')}>← Back to email</button>
+                <h2 className="flow-title">Login with WhatsApp</h2>
+                <p className="flow-subtitle">We'll send a 6-digit code to verify your business number.</p>
+                
+                <div className="phone-input-wrapper-v2">
+                  <div className="prefix">+91</div>
+                  <input 
+                    type="text" 
+                    placeholder="98765 43210" 
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g,''))}
+                    maxLength={10}
+                    autoFocus
+                  />
+                </div>
+
+                <motion.button 
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="btn-submit-premium"
+                  onClick={handleSendOTP}
+                  disabled={phoneNumber.length !== 10}
+                >
+                  Send OTP
+                </motion.button>
+              </motion.div>
+            )}
+
+            {loginMode === 'otp' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="otp-flow-container"
+              >
+                <button className="btn-back-text" onClick={() => setLoginMode('whatsapp')}>← Change number</button>
+                <h2 className="flow-title">Verification</h2>
+                <p className="flow-subtitle">Enter the code sent to +91 {phoneNumber}</p>
+                
+                <div className="otp-inputs">
+                  {otp.map((data, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      maxLength="1"
+                      className="otp-field"
+                      value={data}
+                      onChange={(e) => handleOtpChange(e.target, index)}
+                      onFocus={(e) => e.target.select()}
+                    />
+                  ))}
+                </div>
+
+                <motion.button 
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="btn-submit-premium"
+                  onClick={handleVerifyOTP}
+                  disabled={otp.join('').length !== 6}
+                >
+                  Verify & Enter
+                </motion.button>
+
+                <div className="resend-text">
+                  Didn't receive it? <a href="#">Resend Code</a>
+                </div>
+              </motion.div>
+            )}
           </div>
           
           <div className="auth-footer-v2">
