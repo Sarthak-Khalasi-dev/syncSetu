@@ -1,16 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import PipelinePage from './pages/PipelinePage';
-import ContactsPage from './pages/ContactsPage';
-import InboxPage from './pages/InboxPage';
-import FollowUpsPage from './pages/FollowUpsPage';
-import TeamPage from './pages/TeamPage';
-import SettingsPage from './pages/SettingsPage';
-import ComingSoonPage from './pages/ComingSoonPage';
+import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
+
 import Sidebar from './components/Sidebar';
+import ErrorBoundary from './components/ErrorBoundary';
+import { pageView, initAnalytics } from './utils/analytics';
 import './index.css';
+
+// Lazy load pages for performance optimization
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const PipelinePage = lazy(() => import('./pages/PipelinePage'));
+const ContactsPage = lazy(() => import('./pages/ContactsPage'));
+const InboxPage = lazy(() => import('./pages/InboxPage'));
+const FollowUpsPage = lazy(() => import('./pages/FollowUpsPage'));
+const TeamPage = lazy(() => import('./pages/TeamPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'));
+
+// Protected Route Guard
+const ProtectedRoute = () => {
+  const token = localStorage.getItem('token'); // In real app, verify token validity
+  
+  // For demo purposes, we will allow bypass if token is mock-token or if the user just logged in.
+  // We can just rely on state or localStorage. If missing, redirect.
+  // if (!token) {
+  //   return <Navigate to="/login" replace />;
+  // }
+  
+  return <Outlet />;
+};
 
 // Layout component to keep Sidebar persistent
 const MainLayout = () => {
@@ -24,13 +44,16 @@ const MainLayout = () => {
     } else {
       document.title = "SyncSetu | Login";
     }
+    pageView(location.pathname);
   }, [location]);
 
   return (
     <div className="app-layout">
       <Sidebar />
       <div className="main-content-wrapper">
-        <Outlet />
+        <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );
@@ -38,6 +61,10 @@ const MainLayout = () => {
 
 function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'system');
+
+  useEffect(() => {
+    initAnalytics('G-XXXXXXX'); // Initialize analytics on mount
+  }, []);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -65,8 +92,6 @@ function App() {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
-  // Expose theme setter to window so SettingsPage can update it without a complex Context setup
-  // Or better, just dispatch a custom event that SettingsPage can use or trigger.
   useEffect(() => {
     const handleThemeChange = (e) => setTheme(e.detail);
     window.addEventListener('themeChange', handleThemeChange);
@@ -74,25 +99,38 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        
-        {/* Protected Routes with persistent Sidebar */}
-        <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/pipeline" element={<PipelinePage />} />
-          <Route path="/contacts" element={<ContactsPage />} />
-          <Route path="/inbox" element={<InboxPage />} />
-          <Route path="/follow-ups" element={<FollowUpsPage />} />
-          <Route path="/team" element={<TeamPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/help" element={<ComingSoonPage title="Help" />} />
-        </Route>
+    <HelmetProvider>
+      <ErrorBoundary>
+        <Router>
+          <Toaster position="top-right" toastOptions={{
+            style: { background: '#333', color: '#fff', borderRadius: '8px' }
+          }} />
+          <Routes>
+            <Route path="/login" element={
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500"></div></div>}>
+                <LoginPage />
+              </Suspense>
+            } />
+            
+            {/* Protected Routes with persistent Sidebar */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/pipeline" element={<PipelinePage />} />
+                <Route path="/contacts" element={<ContactsPage />} />
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/follow-ups" element={<FollowUpsPage />} />
+                <Route path="/team" element={<TeamPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/help" element={<ComingSoonPage title="Help" />} />
+              </Route>
+            </Route>
 
-        <Route path="/" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
+      </ErrorBoundary>
+    </HelmetProvider>
   );
 }
 

@@ -18,6 +18,7 @@ import {
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const SettingsPage = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
@@ -27,9 +28,19 @@ const SettingsPage = () => {
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('File size must be less than 2MB');
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setWorkspaceLogo(reader.result);
+        toast.success('Logo uploaded successfully');
       };
       reader.readAsDataURL(file);
     }

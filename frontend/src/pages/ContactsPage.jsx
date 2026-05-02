@@ -9,7 +9,7 @@ import {
   Search
 } from 'lucide-react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import AddContactModal from '../components/AddContactModal';
@@ -62,9 +62,13 @@ const ContactsPage = () => {
   };
 
   const filteredContacts = contactsData.filter(contact => {
-    const matchesSearch = contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         contact.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         contact.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const name = contact.name || "";
+    const role = contact.role || "";
+    const location = contact.location || "";
+    
+    const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         location.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesFilter = statusFilter === "ALL" || contact.status === statusFilter;
     

@@ -18,6 +18,7 @@ import EmojiPicker from 'emoji-picker-react';
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import AddContactModal from '../components/AddContactModal';
+import SEO from '../components/SEO';
 import api from '../services/api';
 
 const DashboardPage = () => {
@@ -138,7 +139,7 @@ const DashboardPage = () => {
 
   return (
     <div className="page-content-wrapper">
-
+      <SEO title="Dashboard" description="SyncSetu CRM Dashboard" />
       {/* Main Content */}
       <main className="main-content">
         <TopHeader 
