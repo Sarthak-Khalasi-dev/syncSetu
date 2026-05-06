@@ -22,6 +22,7 @@ const ContactsPage = () => {
   const [activePage, setActivePage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
   const filterOptions = [
     { label: "All Contacts", value: "ALL" },
@@ -52,7 +53,7 @@ const ContactsPage = () => {
         status: formData.stage || "Lead",
         email: formData.email || "",
         phone: formData.whatsapp || "",
-        value: 0, // Default value as it's not in the form yet
+        value: 0, 
       };
 
       const res = await api.post('/contacts', newContact);
@@ -60,8 +61,24 @@ const ContactsPage = () => {
       setIsModalOpen(false);
     } catch (err) {
       console.error('Error adding contact:', err);
-      // The toast notification is already handled in the api interceptor and AddContactModal onSubmit
     }
+  };
+
+  const handleDeleteContact = async (id) => {
+    try {
+      await api.delete(`/contacts/${id}`);
+      setContactsData(prev => prev.filter(c => (c._id || c.id) !== id));
+      setActiveMenuId(null);
+    } catch (err) {
+      console.error('Error deleting contact:', err);
+    }
+  };
+
+  const handleWhatsAppAction = (phone) => {
+    if (!phone) return;
+    const cleanPhone = phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${cleanPhone}`, '_blank');
+    setActiveMenuId(null);
   };
 
   const filteredContacts = contactsData.filter(contact => {
@@ -79,7 +96,7 @@ const ContactsPage = () => {
   });
 
   return (
-    <div className="page-content-wrapper">
+    <div className="page-content-wrapper" onClick={() => setActiveMenuId(null)}>
 
       <main className="main-content contacts-layout">
         <TopHeader 
@@ -143,10 +160,10 @@ const ContactsPage = () => {
               <thead>
                 <tr>
                   <th>CONTACT NAME</th>
-                  <th>LOCATION</th>
+                  <th className="hide-mobile">LOCATION</th>
                   <th>STATUS</th>
-                  <th>VALUE</th>
-                  <th>LAST ACTIVITY</th>
+                  <th className="hide-mobile">VALUE</th>
+                  <th className="hide-mobile">LAST ACTIVITY</th>
                   <th></th>
                 </tr>
               </thead>
@@ -168,16 +185,51 @@ const ContactsPage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="location-cell">{contact.location}</td>
+                      <td className="location-cell hide-mobile">{contact.location}</td>
                       <td>
                         <span className={`status-pill pill-${contact.statusType || (contact.status === 'WON' ? 'teal' : contact.status === 'FOLLOW-UP' ? 'blue' : contact.status === 'LOST' ? 'red' : 'green')}`}>
                           {contact.status}
                         </span>
                       </td>
-                      <td className="value-cell">₹{contact.value}</td>
-                      <td className="time-cell">{contact.time}</td>
+                      <td className="value-cell hide-mobile">₹{contact.value}</td>
+                      <td className="time-cell hide-mobile">{contact.time}</td>
                       <td>
-                        <button className="action-btn-more"><MoreVertical size={16} /></button>
+                        <div className="action-menu-container" style={{ position: 'relative' }}>
+                          <button 
+                            className={`action-btn-more ${activeMenuId === (contact._id || contact.id) ? 'active' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuId(activeMenuId === (contact._id || contact.id) ? null : (contact._id || contact.id));
+                            }}
+                          >
+                            <MoreVertical size={16} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {activeMenuId === (contact._id || contact.id) && (
+                              <motion.div 
+                                initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                                className="contact-action-dropdown premium-container"
+                              >
+                                <button className="menu-item" onClick={() => navigate(`/contacts/${contact._id || contact.id}`)}>
+                                  View Profile
+                                </button>
+                                <button className="menu-item" onClick={() => handleWhatsAppAction(contact.phone)}>
+                                  WhatsApp Chat
+                                </button>
+                                <div className="menu-divider"></div>
+                                <button 
+                                  className="menu-item delete" 
+                                  onClick={() => handleDeleteContact(contact._id || contact.id)}
+                                >
+                                  Delete Contact
+                                </button>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}

@@ -152,7 +152,10 @@ const DashboardPage = () => {
         <div className="dashboard-content">
           <div className="overview-header-v2">
             <span className="subtitle">DASHBOARD OVERVIEW</span>
-            <h1><span className="name">Namaste, Alex.</span> <span className="greeting-text">You have 4 follow-ups scheduled for today.</span></h1>
+            <h1 className="dashboard-greeting-v2">
+              <span className="name">Namaste, Alex.</span> 
+              <span className="greeting-text">Your sync is healthy with 4 follow-ups today.</span>
+            </h1>
           </div>
 
           <div className="kpi-grid">

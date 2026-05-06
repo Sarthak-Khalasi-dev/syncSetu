@@ -35,6 +35,7 @@ const ProtectedRoute = () => {
 // Layout component to keep Sidebar persistent
 const MainLayout = () => {
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const path = location.pathname.split('/')[1];
@@ -45,14 +46,19 @@ const MainLayout = () => {
       document.title = "SyncSetu | Login";
     }
     pageView(location.pathname);
+    // Close sidebar on navigation on mobile
+    setIsSidebarOpen(false);
   }, [location]);
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
-    <div className="app-layout">
-      <Sidebar />
+    <div className={`app-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
       <div className="main-content-wrapper">
         <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-          <Outlet />
+          <Outlet context={{ toggleSidebar }} />
         </Suspense>
       </div>
     </div>

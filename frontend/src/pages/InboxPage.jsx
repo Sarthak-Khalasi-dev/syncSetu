@@ -10,11 +10,16 @@ import {
   Send,
   User,
   CheckCheck,
-  Paperclip
+  Paperclip,
+  ChevronLeft,
+  Inbox,
+  Menu
 } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
 const InboxPage = () => {
+  const { toggleSidebar } = useOutletContext() || {};
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState(1);
   const [inputText, setInputText] = useState("");
@@ -148,6 +153,9 @@ const InboxPage = () => {
             className="inbox-col-header"
           >
             <div className="inbox-header-top">
+              <button className="mobile-menu-toggle" onClick={toggleSidebar}>
+                <Menu size={24} />
+              </button>
               <h1 className="inbox-title">Inbox</h1>
               <div className="inbox-count-badge">{conversations.length}</div>
             </div>
@@ -202,7 +210,7 @@ const InboxPage = () => {
         </section>
 
         {/* Column 3: Chat Window */}
-        <section className="inbox-chat-column">
+        <section className={`inbox-chat-column ${activeContact ? 'active' : ''}`}>
           <AnimatePresence mode="wait">
             {activeContact ? (
               <motion.div 
@@ -215,6 +223,9 @@ const InboxPage = () => {
                 style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
               >
                 <header className="chat-header-v2">
+                  <button className="mobile-back-to-inbox" onClick={() => setActiveTab(null)}>
+                    <ChevronLeft size={24} />
+                  </button>
                   <div className="chat-header-user">
                     <div className="chat-header-avatar-container">
                       {activeContact.avatar ? (

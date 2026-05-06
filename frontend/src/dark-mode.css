@@ -7,24 +7,37 @@
 ========================================================== */
 
 html.dark {
-  /* Brand/System Token Overrides */
+  /* Brand Palette - Deep & Premium Dark */
   --teal-brand: #00a884;
   --teal-dark: #008f70;
-  --text-dark: #e9edef;
-  --text-muted: #8696a0;
+  --teal-bg: rgba(0, 168, 132, 0.1);
+  --whatsapp-green: #23cc62;
+  --whatsapp-hover: #1dae52;
+  
+  /* Surface & Text - High Contrast Dark */
+  --text-dark: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --input-bg: #111b21;
   --white: #0b141a;
-  --divider: #222d34;
-
-  --syncsetu-mint-bg: #111b21;
-  --syncsetu-mint-dark: #e9edef;
-  --syncsetu-border: #222d34;
+  --divider: #1e293b;
+  
+  /* SyncSetu Specifics */
+  --syncsetu-mint-bg: #0b141a;
+  --syncsetu-mint-dark: #f8fafc;
+  --syncsetu-text-muted: #94a3b8;
   --syncsetu-white: #111b21;
-
-  --syncsetu-inbox-bg: #0b141a;
+  --syncsetu-border: #1e293b;
+  --syncsetu-inbox-bg: #111b21;
   --syncsetu-chat-bg: #0b141a;
   --syncsetu-bubble-sent: #005c4b;
   --syncsetu-bubble-received: #202c33;
   --syncsetu-search-bg: #202c33;
+
+  /* Effects */
+  --premium-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(17, 27, 33, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
 }
 
 /* ── Global Structure ── */
@@ -43,6 +56,17 @@ html.dark .pipeline-content-wrapper,
 html.dark .team-layout,
 html.dark .follow-ups-layout,
 html.dark .settings-layout,
+html.dark .main-content {
+  background-color: var(--white);
+  background: radial-gradient(circle at top right, #111b21, #0b141a) !important;
+}
+
+@media (max-width: 1024px) {
+  html.dark .main-content {
+     background: linear-gradient(180deg, #111b21 0%, #0b141a 100%) !important;
+  }
+}
+
 html.dark .team-main-content,
 html.dark .follow-ups-main,
 html.dark .settings-main-content {
@@ -69,11 +93,11 @@ html.dark .user-name {
 }
 
 html.dark .user-account-type {
-  color: #8696a0 !important;
+  color: #aebac1 !important;
 }
 
 html.dark .nav-item-v2 {
-  color: #8696a0 !important;
+  color: #aebac1 !important;
   background: transparent !important;
 }
 
@@ -210,7 +234,7 @@ html.dark .kpi-desc,
 html.dark .greeting-text,
 html.dark .lead-company,
 html.dark .lead-time {
-  color: #8696a0 !important;
+  color: #aebac1 !important;
 }
 
 html.dark .kpi-body h2,
@@ -432,8 +456,38 @@ html.dark h6 {
 html.dark p,
 html.dark span,
 html.dark label,
-html.dark div {
-  /* Only apply if not specifically overridden above */
+html.dark div:not(.message-content) {
+  /* Secondary text defaults */
+  color: #aebac1;
+}
+
+html.dark .text-muted,
+html.dark .card-subtitle-v2,
+html.dark .kpi-desc,
+html.dark .phone-label,
+html.dark .member-role-v2,
+html.dark .stat-label,
+html.dark .box-label,
+html.dark .alert-desc-v2,
+html.dark .logo-meta,
+html.dark .inbox-item-snippet,
+html.dark .card-desc,
+html.dark .stats-label,
+html.dark .message-time {
+  color: #aebac1 !important;
+  opacity: 1 !important;
+}
+
+html.dark .page-title,
+html.dark .brand-name-v2,
+html.dark .hero-title-v2,
+html.dark .card-title-v2,
+html.dark .member-name-v2,
+html.dark .inbox-item-name,
+html.dark .card-person,
+html.dark .stats-main h2,
+html.dark .modal-header-section h2 {
+  color: #ffffff !important;
 }
 
 /* Specific Fix for Pipeline bottom banner shown in screenshot */
