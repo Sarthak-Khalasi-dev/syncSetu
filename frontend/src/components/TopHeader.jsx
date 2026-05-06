@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useOutletContext } from 'react-router-dom';
 import { 
   Search, 
   Bell, 
@@ -7,7 +8,8 @@ import {
   User, 
   Clock, 
   Zap,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Menu
 } from 'lucide-react';
 import FilterDropdown from './FilterDropdown';
 
@@ -21,6 +23,7 @@ const TopHeader = ({
   activeFilter = 'ALL',
   filterOptions = []
 }) => {
+  const { toggleSidebar } = useOutletContext() || {};
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [notifications, setNotifications] = useState([
@@ -67,6 +70,9 @@ const TopHeader = ({
       setIsNotificationOpen(false);
     }}>
       <div className="header-left">
+        <button className="mobile-menu-toggle" onClick={toggleSidebar}>
+          <Menu size={24} />
+        </button>
         <h1 className={title === "Contacts" ? "page-title-bold" : "page-title"}>{title}</h1>
       </div>
       
@@ -170,8 +176,6 @@ const TopHeader = ({
           </div>
         )}
 
-
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Profile" className="user-avatar" />
       </div>
     </header>
   );

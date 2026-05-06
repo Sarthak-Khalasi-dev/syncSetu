@@ -11,7 +11,7 @@ exports.getContacts = async (req, res) => {
       data: contacts
     });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -25,7 +25,7 @@ exports.getContact = async (req, res) => {
     }
     res.status(200).json({ success: true, data: contact });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -36,7 +36,7 @@ exports.createContact = async (req, res) => {
     const contact = await Contact.create(req.body);
     res.status(201).json({ success: true, data: contact });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -53,7 +53,7 @@ exports.updateContact = async (req, res) => {
     }
     res.status(200).json({ success: true, data: contact });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -70,7 +70,7 @@ exports.patchContact = async (req, res) => {
     }
     res.status(200).json({ success: true, data: contact });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -84,6 +84,6 @@ exports.deleteContact = async (req, res) => {
     }
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };

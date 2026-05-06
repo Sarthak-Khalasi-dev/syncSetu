@@ -14,7 +14,7 @@ import {
   Plus
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,19 +29,21 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar-syncsetu">
-      <div className="sidebar-brand" style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: '8px' }}>
-        <div className="brand-logo-wrapper" style={{ width: '36px', height: '36px', padding: '6px', flexShrink: 0 }}>
-          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img-v2" style={{ width: '100%', height: '100%' }} />
+    <aside className={`sidebar-syncsetu ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-brand">
+        <div className="brand-logo-wrapper">
+          <img src={logo} alt="SyncSetu Logo" className="brand-logo-img-v2" />
         </div>
         <motion.h1 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="brand-name"
-          style={{ margin: 0, fontSize: '22px' }}
         >
           SyncSetu
         </motion.h1>
+        <button className="mobile-close-sidebar" onClick={onClose}>
+          <Plus size={24} style={{ transform: 'rotate(45deg)' }} />
+        </button>
       </div>
 
       <div className="sidebar-user-top">
@@ -66,7 +68,10 @@ const Sidebar = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                navigate(item.path);
+                onClose();
+              }}
               className={`nav-item-v2 ${isActive ? 'active' : ''}`}
             >
               <item.icon size={20} className="nav-icon" />
@@ -84,7 +89,10 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="nav-item-v2 log-out-btn" onClick={() => navigate('/')}>
+        <div className="nav-item-v2 log-out-btn" onClick={() => {
+          navigate('/');
+          onClose();
+        }}>
           <LogOut size={20} className="nav-icon" />
           <span className="nav-text">Log Out</span>
         </div>
