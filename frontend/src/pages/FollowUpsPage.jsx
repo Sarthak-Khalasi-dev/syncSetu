@@ -14,9 +14,11 @@ import {
 import Sidebar from '../components/Sidebar';
 import TopHeader from '../components/TopHeader';
 import { useState } from 'react';
+import { useCall } from '../context/CallContext';
 
 const FollowUpsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { startCall } = useCall();
   const overdueLarge = {
     name: "Rajesh Malhotra",
     status: "OVERDUE 2 DAYS",
@@ -143,7 +145,15 @@ const FollowUpsPage = () => {
                   ))}
                   <div className="group-more">+2</div>
                 </div>
-                <button className="btn-call-now">Call Now</button>
+                <button 
+                  className="btn-call-now"
+                  onClick={() => startCall({
+                    name: overdueLarge.name,
+                    avatar: overdueLarge.avatars[0]
+                  }, 'voice')}
+                >
+                  Call Now
+                </button>
               </div>
             </motion.div>
 

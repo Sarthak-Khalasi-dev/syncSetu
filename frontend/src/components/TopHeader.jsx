@@ -8,8 +8,7 @@ import {
   User, 
   Clock, 
   Zap,
-  SlidersHorizontal,
-  Menu
+  SlidersHorizontal
 } from 'lucide-react';
 import FilterDropdown from './FilterDropdown';
 
@@ -70,9 +69,6 @@ const TopHeader = ({
       setIsNotificationOpen(false);
     }}>
       <div className="header-left">
-        <button className="mobile-menu-toggle" onClick={toggleSidebar}>
-          <Menu size={24} />
-        </button>
         <h1 className={title === "Contacts" ? "page-title-bold" : "page-title"}>{title}</h1>
       </div>
       

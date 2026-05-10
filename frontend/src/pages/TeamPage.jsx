@@ -106,77 +106,91 @@ const TeamPage = () => {
               {teamMembers.map((member, index) => (
                 <motion.div 
                   key={member.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.08, ease: "easeOut" }}
+                  whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.12)" }}
                   className="member-item-card premium-lead-item"
                 >
-                  <div className="member-avatar-wrapper">
-                    <img src={member.avatar} alt={member.name} className="member-avatar-img" />
-                    {member.verified && (
-                      <div className="status-indicator-mini success">
-                        <CheckCircle size={10} fill="currentColor" strokeWidth={3} />
-                      </div>
-                    )}
-                    {member.error && (
-                      <div className="status-indicator-mini danger">
-                        <Activity size={10} fill="currentColor" strokeWidth={3} />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="member-info-col">
-                    <h3 className="member-name-v2">{member.name}</h3>
-                    <span className="member-role-v2">{member.role}</span>
-                  </div>
-
-                  <div className="member-status-col">
-                    <span className="status-label-v2">WhatsApp Status</span>
-                    <div className={`status-pill-v2 ${member.statusType}`}>
-                      {member.status}
-                    </div>
-                  </div>
-
-                  <div className="member-progress-col">
-                    <div className="progress-bar-v2">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${member.progress}%` }}
-                        transition={{ duration: 1, delay: 0.5 }}
-                        className={`progress-fill-v2 ${member.statusType}`}
-                      ></motion.div>
-                    </div>
-                  </div>
-
-                  <button className="member-more-btn" onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveMenuId(activeMenuId === member.id ? null : member.id);
-                  }}>
-                    <MoreVertical size={20} />
-                    
-                    <AnimatePresence>
-                      {activeMenuId === member.id && (
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.9, y: -10 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                          className="member-action-dropdown premium-container"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
-                            <Users size={16} /> View Profile
-                          </div>
-                          <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
-                            <Activity size={16} /> Sync WhatsApp
-                          </div>
-                          <div className="dropdown-divider"></div>
-                          <div className="dropdown-item danger" onClick={() => setActiveMenuId(null)}>
-                            <AlertTriangle size={16} /> Reset Session
-                          </div>
-                        </motion.div>
+                  <div className="member-avatar-section">
+                    <div className="member-avatar-wrapper">
+                      <img src={member.avatar} alt={member.name} className="member-avatar-img" />
+                      <div className={`status-glow ${member.statusType}`}></div>
+                      {member.verified && (
+                        <div className="status-indicator-mini success">
+                          <CheckCircle size={10} fill="currentColor" strokeWidth={3} />
+                        </div>
                       )}
-                    </AnimatePresence>
-                  </button>
+                      {member.error && (
+                        <div className="status-indicator-mini danger">
+                          <Activity size={10} fill="currentColor" strokeWidth={3} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="member-info-col">
+                      <h3 className="member-name-v2">{member.name}</h3>
+                      <span className="member-role-v2">{member.role}</span>
+                    </div>
+                  </div>
+
+                  <div className="member-stats-row">
+                    <div className="member-status-col">
+                      <span className="status-label-v2">WhatsApp Status</span>
+                      <div className={`status-pill-v2 ${member.statusType}`}>
+                        <div className="pulse-dot"></div>
+                        {member.status}
+                      </div>
+                    </div>
+
+                    <div className="member-progress-col">
+                      <div className="progress-header-v2">
+                        <span className="progress-label-v2">Engagement Score</span>
+                        <span className="progress-value-v2">{member.progress}%</span>
+                      </div>
+                      <div className="progress-bar-v2">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${member.progress}%` }}
+                          transition={{ duration: 1.2, delay: 0.5, ease: "circOut" }}
+                          className={`progress-fill-v2 ${member.statusType}`}
+                        >
+                          <div className="progress-shine"></div>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="member-actions-section">
+                    <button className="member-more-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveMenuId(activeMenuId === member.id ? null : member.id);
+                    }}>
+                      <MoreVertical size={20} />
+                      
+                      <AnimatePresence>
+                        {activeMenuId === member.id && (
+                          <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                            className="member-action-dropdown premium-container"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
+                              <Users size={16} /> View Profile
+                            </div>
+                            <div className="dropdown-item" onClick={() => setActiveMenuId(null)}>
+                              <Activity size={16} /> Sync WhatsApp
+                            </div>
+                            <div className="dropdown-divider"></div>
+                            <div className="dropdown-item danger" onClick={() => setActiveMenuId(null)}>
+                              <AlertTriangle size={16} /> Reset Session
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </div>

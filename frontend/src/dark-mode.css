@@ -130,7 +130,9 @@ html.dark .settings-header-v2,
 html.dark .team-header-v2,
 html.dark .follow-ups-header,
 html.dark .pipeline-header {
-  background-color: #111b21 !important;
+  background-color: rgba(17, 27, 33, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-bottom: 1px solid #222d34 !important;
 }
 
@@ -201,10 +203,10 @@ html.dark .performance-widget,
 html.dark .followup-reminder-widget,
 html.dark .stats-card,
 html.dark .momentum-banner {
-  background-color: #111b21 !important;
-  background-image: none !important;
-  border: 1px solid #222d34 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  background: rgba(32, 44, 51, 0.6) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
 }
 
 html.dark .premium-container:hover,
@@ -1312,3 +1314,553 @@ html.dark .notif-icon.bg-green-light { background: rgba(0, 168, 132, 0.1) !impor
 html.dark .notif-icon .text-teal { color: #00a884 !important; }
 html.dark .notif-icon .text-slate { color: #8696a0 !important; }
 html.dark .notif-icon .text-green { color: #00a884 !important; }
+/* ==========================================================
+   SYNCSETU PREMIUM DARK OVERRIDES
+   ========================================================== */
+
+html.dark {
+  --premium-glass: rgba(17, 27, 33, 0.7);
+  --premium-border: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .sidebar-syncsetu {
+  background: var(--premium-glass) !important;
+  backdrop-filter: blur(30px) !important;
+  border-right: 1px solid var(--premium-border) !important;
+}
+
+html.dark .dashboard-header {
+  background: var(--premium-glass) !important;
+  border-bottom: 1px solid var(--premium-border) !important;
+}
+
+html.dark .nav-item-v2.active {
+  background: linear-gradient(135deg, #00a884 0%, #005c4b 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .premium-kpi-card {
+  background: linear-gradient(145deg, #202c33 0%, #111b21 100%) !important;
+  border: 1px solid var(--premium-border) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .premium-kpi-card:hover {
+  border-color: #00a884 !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark .dashboard-greeting-v2 .name {
+  background: linear-gradient(135deg, #ffffff 0%, #00a884 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .header-search {
+  background: #202c33 !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark .icon-btn {
+  background: #202c33 !important;
+  border: 1px solid var(--premium-border) !important;
+  color: #e9edef !important;
+}
+
+html.dark .icon-btn:hover {
+  background: #2a3942 !important;
+  transform: translateY(-2px);
+}
+
+/* Hide navigation toggles in dark mode too */
+html.dark .mobile-menu-toggle,
+html.dark .mobile-close-sidebar {
+  display: none !important;
+}
+
+
+/* ==========================================================
+   SYNCSETU ULTRA-PREMIUM DARK THEME OVERRIDES
+   ========================================================== */
+
+@keyframes mesh-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+html.dark body {
+  background: #0b141a !important;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 168, 132, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(0, 143, 112, 0.03) 0px, transparent 50%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Glass Cards with Animated Borders */
+html.dark .premium-kpi-card, 
+html.dark .premium-lead-item,
+html.dark .contact-card,
+html.dark .kanban-card {
+  background: rgba(32, 44, 51, 0.4) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+html.dark .premium-kpi-card:hover {
+  background: rgba(32, 44, 51, 0.6) !important;
+  border-color: rgba(0, 168, 132, 0.4) !important;
+  box-shadow: 0 20px 60px rgba(0, 168, 132, 0.15) !important;
+  transform: translateY(-8px) scale(1.01) !important;
+}
+
+/* Sidebar Ultra Polish */
+html.dark .sidebar-syncsetu {
+  background: rgba(17, 27, 33, 0.85) !important;
+  backdrop-filter: blur(40px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark .nav-item-v2.active {
+  background: linear-gradient(135deg, #00a884 0%, #008f70 100%) !important;
+  box-shadow: 0 0 25px rgba(0, 168, 132, 0.3) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+html.dark .nav-item-v2.active::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Typography & Colors */
+html.dark .dashboard-greeting-v2 .name {
+  background: linear-gradient(to right, #ffffff, #00a884, #ffffff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: mesh-gradient 5s linear infinite;
+}
+
+html.dark .page-title, 
+html.dark .page-title-bold {
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Dashboard Header Glass */
+html.dark .dashboard-header {
+  background: rgba(11, 20, 26, 0.7) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Icons & Indicators */
+html.dark .pro-badge-mini {
+  box-shadow: 0 0 15px rgba(0, 168, 132, 0.5) !important;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(0, 168, 132, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 168, 132, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(0, 168, 132, 0.3); }
+}
+
+/* Chat Bubbles Polish */
+html.dark .sent .message-content {
+  background: linear-gradient(135deg, #005c4b 0%, #004d3f 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .received .message-content {
+  background: #202c33 !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Search Bar Glow */
+html.dark .header-search:focus-within {
+  border-color: rgba(0, 168, 132, 0.5) !important;
+  box-shadow: 0 0 20px rgba(0, 168, 132, 0.1) !important;
+}
+
+
+/* Final Polish for Ultra Dark Theme */
+html.dark .header-search {
+  background: rgba(32, 44, 51, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .icon-btn {
+  border-radius: 14px !important;
+  transition: all 0.3s ease !important;
+}
+
+html.dark .notification-dot {
+  background-color: #00a884 !important;
+  box-shadow: 0 0 10px rgba(0, 168, 132, 0.8) !important;
+}
+
+html.dark .btn-filter {
+  background: rgba(32, 44, 51, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #e9edef !important;
+}
+
+html.dark .btn-filter:hover {
+  background: #2a3942 !important;
+  border-color: #00a884 !important;
+}
+
+/* Scrollbar refinement */
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(0, 168, 132, 0.2) !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 168, 132, 0.4) !important;
+}
+
+
+/* Fix for Login Page text visibility in Dark Mode */
+html.dark .hero-title-v2 {
+  color: #ffffff !important;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .hero-subtitle-v2 {
+  color: #aebac1 !important;
+}
+
+html.dark .form-label-v2, 
+html.dark .forgot-link-v2,
+html.dark .divider-premium span,
+html.dark .auth-footer-v2 {
+  color: #8696a0 !important;
+}
+
+html.dark .brand-name-v2 {
+  color: #00a884 !important;
+}
+
+html.dark .right-inner {
+  color: #e9edef !important;
+}
+
+/* Ensure form labels are visible */
+html.dark .form-group-premium label {
+  color: #aebac1 !important;
+}
+
+
+/* Applying consistent premium gradient to Login Hero in Dark Mode */
+html.dark .hero-title-v2 {
+  background: linear-gradient(to right, #ffffff 0%, #00a884 50%, #ffffff 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: mesh-gradient 8s linear infinite !important;
+}
+
+
+/* Fix for Phone Input visibility in Dark Mode */
+html.dark .phone-input-wrapper-v2 {
+  background: #202c33 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .phone-input-wrapper-v2:focus-within {
+  background: #2a3942 !important;
+  border-color: #00a884 !important;
+  box-shadow: 0 0 20px rgba(0, 168, 132, 0.1) !important;
+}
+
+html.dark .phone-input-wrapper-v2 input {
+  color: #e9edef !important;
+}
+
+html.dark .phone-input-wrapper-v2 .prefix {
+  color: #00a884 !important;
+}
+
+/* Fix for OTP inputs in Dark Mode */
+html.dark .otp-field {
+  background: #202c33 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+html.dark .otp-field:focus {
+  border-color: #00a884 !important;
+  background: #2a3942 !important;
+}
+
+
+/* Ultra Premium Inbox Overrides */
+html.dark .inbox-conversations-column {
+  background: rgba(17, 27, 33, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .inbox-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dark .inbox-item:hover {
+  background: rgba(0, 168, 132, 0.05) !important;
+  transform: translateX(4px);
+}
+
+html.dark .inbox-item.active {
+  background: rgba(0, 168, 132, 0.1) !important;
+  border-left: 4px solid #00a884 !important;
+}
+
+html.dark .chat-window-inner {
+  background: radial-gradient(circle at top right, #111b21, #0b141a) !important;
+}
+
+html.dark .chat-bubble-v2 {
+  border-radius: 20px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .sent .chat-bubble-v2 {
+  background: linear-gradient(135deg, #005c4b 0%, #004d3f 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .received .chat-bubble-v2 {
+  background: rgba(32, 44, 51, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Emoji Picker Polish */
+html.dark .EmojiPickerReact {
+  --epr-bg-color: #111b21 !important;
+  --epr-category-label-bg-color: #1a242b !important;
+  --epr-picker-border-color: rgba(255, 255, 255, 0.1) !important;
+  --epr-search-input-bg-color: #202c33 !important;
+  --epr-search-input-text-color: #e9edef !important;
+  --epr-highlight-color: #00a884 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+}
+
+html.dark .EmojiPickerReact li.epr-emoji-category > .epr-emoji-category-label {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 11px !important;
+  color: #00a884 !important;
+}
+
+/* Inbox Badges */
+html.dark .inbox-item-badge {
+  border-radius: 8px !important;
+  padding: 4px 10px !important;
+  font-weight: 700 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+}
+
+html.dark .badge-new { background: rgba(0, 168, 132, 0.2) !important; color: #00f2c3 !important; }
+html.dark .badge-won { background: rgba(35, 204, 98, 0.2) !important; color: #23cc62 !important; }
+html.dark .badge-follow-up { background: rgba(59, 130, 246, 0.2) !important; color: #60a5fa !important; }
+
+/* Scrollbar in Inbox */
+html.dark .inbox-list-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+
+/* Solid Background for Emoji Picker */
+html.dark .EmojiPickerReact {
+  background-color: #111b21 !important;
+  --epr-bg-color: #111b21 !important;
+  --epr-category-label-bg-color: #111b21 !important;
+}
+
+html.dark .EmojiPickerReact .epr-search-container {
+  background-color: #111b21 !important;
+}
+
+html.dark .EmojiPickerReact .epr-body {
+  background-color: #111b21 !important;
+}
+
+html.dark .EmojiPickerReact .epr-header {
+  background-color: #111b21 !important;
+}
+
+
+/* Proper Header/Footer for Dark Mode Inbox */
+html.dark .chat-header-v2 {
+  background: rgba(17, 27, 33, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .chat-footer-v2 {
+  background: rgba(17, 27, 33, 0.9) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .back-to-inbox-btn {
+  color: #00a884 !important;
+}
+
+html.dark .chat-header-name {
+  color: #e9edef !important;
+}
+
+html.dark .chat-header-role {
+  color: #8696a0 !important;
+}
+
+html.dark .chat-action-btn {
+  color: #aebac1 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark .chat-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+
+/* Attractive Dark Mode Inbox */
+html.dark .inbox-chat-column {
+  background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+  background-size: 500px;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+html.dark .inbox-chat-column::before {
+  background: rgba(11, 20, 26, 0.95); /* Deep dark overlay for subtle doodle */
+}
+
+html.dark .inbox-item {
+  background: rgba(32, 44, 51, 0.4) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .inbox-item:hover {
+  background: rgba(42, 57, 66, 0.6) !important;
+  border-color: rgba(0, 168, 132, 0.3) !important;
+}
+
+html.dark .inbox-item.active {
+  background: rgba(0, 168, 132, 0.15) !important;
+  border-color: #00a884 !important;
+  box-shadow: 0 10px 30px rgba(0, 168, 132, 0.1) !important;
+}
+
+/* Chat Bubbles Glow */
+html.dark .sent .chat-bubble-v2 {
+  box-shadow: 0 8px 25px rgba(0, 92, 75, 0.3) !important;
+}
+
+html.dark .received .chat-bubble-v2 {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+/* Ultra Premium Dark Theme Overhaul for Inbox */
+html.dark .inbox-main-content {
+  background: radial-gradient(circle at top right, #111b21, #0b141a) !important;
+}
+
+html.dark .inbox-conversations-column {
+  padding: 40px 10% !important;
+}
+
+html.dark .inbox-title {
+  color: #ffffff !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+html.dark .inbox-search-container {
+  background: #202c33 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  padding: 12px 20px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.dark .inbox-search-input {
+  color: #e9edef !important;
+  font-size: 15px !important;
+}
+
+html.dark .inbox-search-icon {
+  color: #8696a0 !important;
+}
+
+/* Card Refinements */
+html.dark .inbox-item {
+  background: linear-gradient(145deg, #1a242b 0%, #111b21 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+  padding: 24px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .inbox-item-name {
+  color: #e9edef !important;
+  font-size: 18px !important;
+}
+
+html.dark .inbox-item-snippet {
+  color: #8696a0 !important;
+  font-size: 14px !important;
+}
+
+html.dark .inbox-item-time {
+  color: #8696a0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+html.dark .inbox-item.active {
+  background: linear-gradient(145deg, #202c33 0%, #1a242b 100%) !important;
+  border-color: #00a884 !important;
+  box-shadow: 0 15px 40px rgba(0, 168, 132, 0.15) !important;
+}
+
+/* Scrollbar Polish */
+html.dark ::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #374045 !important;
+  border-radius: 10px !important;
+}
+

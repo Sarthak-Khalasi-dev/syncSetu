@@ -10,8 +10,7 @@ import {
   Users,
   Settings,
   LogOut,
-  ChevronRight,
-  Plus
+  ChevronRight
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -41,22 +40,35 @@ const Sidebar = ({ isOpen, onClose }) => {
         >
           SyncSetu
         </motion.h1>
-        <button className="mobile-close-sidebar" onClick={onClose}>
-          <Plus size={24} style={{ transform: 'rotate(45deg)' }} />
-        </button>
       </div>
 
       <div className="sidebar-user-top">
-        <div className="user-profile-simple">
+        <motion.div 
+          whileHover={{ scale: 1.02 }}
+          className="user-profile-simple"
+        >
           <div className="avatar-container-premium">
             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Sterling" className="user-avatar" />
-            <div className="pro-badge-mini">PRO</div>
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [1, 0.8, 1]
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity,
+                ease: "easeInOut" 
+              }}
+              className="pro-badge-mini"
+            >
+              PRO
+            </motion.div>
           </div>
           <div className="user-info">
             <span className="user-name">Alex Sterling</span>
             <span className="user-account-type">Premium Account</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <nav className="sidebar-nav-v2">

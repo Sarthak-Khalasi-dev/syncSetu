@@ -6,6 +6,8 @@ import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/Sidebar';
 import ErrorBoundary from './components/ErrorBoundary';
 import { pageView, initAnalytics } from './utils/analytics';
+import { CallProvider } from './context/CallContext';
+import GlobalCallOverlay from './components/GlobalCallOverlay';
 import './index.css';
 
 // Lazy load pages for performance optimization
@@ -106,12 +108,14 @@ function App() {
 
   return (
     <HelmetProvider>
-      <ErrorBoundary>
-        <Router>
-          <Toaster position="top-right" toastOptions={{
-            style: { background: '#333', color: '#fff', borderRadius: '8px' }
-          }} />
-          <Routes>
+      <CallProvider>
+        <ErrorBoundary>
+          <Router>
+            <Toaster position="top-right" toastOptions={{
+              style: { background: '#333', color: '#fff', borderRadius: '8px' }
+            }} />
+            <GlobalCallOverlay />
+            <Routes>
             <Route path="/login" element={
               <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500"></div></div>}>
                 <LoginPage />
@@ -136,6 +140,7 @@ function App() {
           </Routes>
         </Router>
       </ErrorBoundary>
+      </CallProvider>
     </HelmetProvider>
   );
 }
